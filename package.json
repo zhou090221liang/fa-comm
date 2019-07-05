@@ -1,0 +1,25 @@
+{
+    "name": "fa-comm",
+    "version": "0.0.1",
+    "description": "通用方法全聚合",
+    "author": "zxy<zxy@zhouxiaoyue.cn>",
+    "main": "./index.js",
+    "repository": {
+        "type": "git",
+        "location": "git@github.com:zhou090221liang/fa-comm.git",
+        "url": "https://github.com/zhou090221liang/fa-comm"
+    },
+    "keywords": [
+        "fa",
+        "comm",
+        "fa-comm"
+    ],
+    "dependencies": {
+        "request": "^2.88.0",
+        "node-uuid": "^1.4.8",
+        "single-line-log": "^1.1.2",
+        "ioredis": "^4.9.5",
+        "mysql": "^2.17.1",
+        "amqplib": "^0.5.3"
+    }
+}
