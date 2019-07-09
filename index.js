@@ -38,15 +38,24 @@ function getCallerFileNameAndLine() {
     const stack = err.stack;
     const stackArr = stack.split('\n');
     let callerLogIndex = 0;
+    let str = '';
     for (let i = stackArr.length - 1; i >= 0; i--) {
+        //at Server.<anonymous> (/Users/zhouxiaoyue/Documents/SoftwareDev/Gitee/server/api/lib/server.js:281:9)
+        //at Object.<anonymous> (/Users/zhouxiaoyue/Documents/SoftwareDev/Gitee/server/api/lib/server.js:281:9)
         if (stackArr[i].indexOf('at Object.<anonymous> (') > -1) {
+            str = 'at Object.<anonymous> (';
+            callerLogIndex = i;
+            break;
+        }
+        if (stackArr[i].indexOf('at Server.<anonymous> (') > -1) {
+            str = 'at Server.<anonymous> (';
             callerLogIndex = i;
             break;
         }
     }
     if (callerLogIndex !== 0) {
         const callerStackLine = stackArr[callerLogIndex];
-        return callerStackLine.Trim().replace('at Object.<anonymous> (', '').substring(0, callerStackLine.Trim().replace('at Object.<anonymous> (', '').length - 1);
+        return callerStackLine.Trim().replace(str, '').substring(0, callerStackLine.Trim().replace(str, '').length - 1);
     } else {
         return '';
     }
