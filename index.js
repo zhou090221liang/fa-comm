@@ -26,6 +26,32 @@ _module.global = () => {
     return _global;
 };
 
+function getCallerFileNameAndLine() {
+    function getException() {
+        try {
+            throw Error('');
+        } catch (err) {
+            return err;
+        }
+    }
+    const err = getException();
+    const stack = err.stack;
+    const stackArr = stack.split('\n');
+    let callerLogIndex = 0;
+    for (let i = stackArr.length - 1; i >= 0; i--) {
+        if (stackArr[i].indexOf('at Object.<anonymous> (') > -1) {
+            callerLogIndex = i;
+            break;
+        }
+    }
+    if (callerLogIndex !== 0) {
+        const callerStackLine = stackArr[callerLogIndex];
+        return callerStackLine.Trim().replace('at Object.<anonymous> (', '').substring(0, callerStackLine.Trim().replace('at Object.<anonymous> (', '').length - 1);
+    } else {
+        return '';
+    }
+}
+
 /**
  * 创建日志对象
  * @param {String} name 日志文件名称
@@ -57,7 +83,7 @@ _module.createLog = (name, dir) => {
     _module.fs.mkfileSync(logObj._warnpath);
     _module.fs.mkfileSync(logObj._errorpath);
     logObj.log = (...message) => {
-        let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
+        let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         for (const msg of message) {
             _message.push(msg.toText());
         }
@@ -66,7 +92,7 @@ _module.createLog = (name, dir) => {
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
     logObj.info = (...message) => {
-        let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
+        let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         for (const msg of message) {
             _message.push(msg.toText());
         }
@@ -75,7 +101,7 @@ _module.createLog = (name, dir) => {
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
     logObj.warn = (...message) => {
-        let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
+        let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         for (const msg of message) {
             _message.push(msg.toText());
         }
@@ -84,7 +110,7 @@ _module.createLog = (name, dir) => {
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
     logObj.error = (...message) => {
-        let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
+        let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         for (const msg of message) {
             _message.push(msg.toText());
         }
