@@ -97,7 +97,7 @@ _module.createLog = (name, dir) => {
         for (const msg of message) {
             _message.push(msg.toText());
         }
-        console.log(_message.join(''));
+        console.log(_message.join(' '));
         fs.appendFileSync(logObj._logpath, _message.join('') + logObj._newline);
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
@@ -107,7 +107,7 @@ _module.createLog = (name, dir) => {
         for (const msg of message) {
             _message.push(msg.toText());
         }
-        console.info(_message.join(''));
+        console.info(_message.join(' '));
         fs.appendFileSync(logObj._infopath, _message.join('') + logObj._newline);
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
@@ -117,7 +117,7 @@ _module.createLog = (name, dir) => {
         for (const msg of message) {
             _message.push(msg.toText());
         }
-        console.warn(_message.join(''));
+        console.warn(_message.join(' '));
         fs.appendFileSync(logObj._warnpath, _message.join('') + logObj._newline);
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
@@ -127,7 +127,7 @@ _module.createLog = (name, dir) => {
         for (const msg of message) {
             _message.push(msg.toText());
         }
-        console.error(_message.join(''));
+        console.error(_message.join(' '));
         fs.appendFileSync(logObj._errorpath, _message.join('') + logObj._newline);
         fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
     };
