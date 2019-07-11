@@ -1,2 +1,7 @@
 const ip = require('../index').ip;
-console.log('current ip:', ip.local);
+
+(async function () {
+    console.log('current ip:', ip.local);
+    const addr = await ip.info();
+    console.log('info:', addr);
+})();

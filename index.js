@@ -12,6 +12,7 @@ _module.convert = require('./lib/comm/convert');
 _module.fs = require('./lib/comm/fs');
 _module.guid = require('./lib/comm/guid');
 _module.ip = require('./lib/comm/ip');
+_module.live = require('./lib/comm/live');
 _module.process = require('./lib/comm/process');
 _module.progress = require('./lib/comm/progress');
 _module.random = require('./lib/comm/random');
