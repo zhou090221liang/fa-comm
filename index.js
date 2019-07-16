@@ -17,6 +17,7 @@ _module.process = require('./lib/comm/process');
 _module.progress = require('./lib/comm/progress');
 _module.random = require('./lib/comm/random');
 _module.req = require('./lib/comm/req');
+_module.system = require('./lib/comm/system');
 _module.verify = require('./lib/comm/verify');
 
 /**
