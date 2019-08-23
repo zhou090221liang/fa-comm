@@ -4,6 +4,7 @@ const fs = require('fs');
 const mysql = require('./lib/db/mysql');
 const redis = require('./lib/db/redis');
 const rabbitmq = require('./lib/queue/rabbitmq');
+const convert = require('./lib/comm/convert');
 
 let _global = {};
 let _module = {};
@@ -97,7 +98,7 @@ _module.createLog = (name, dir) => {
         // let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
-            _message.push(msg.toText());
+            _message.push(convert.toString(msg));
         }
         console.log(_message.join(' '));
         fs.appendFileSync(logObj._logpath, _message.join('') + logObj._newline);
@@ -107,7 +108,7 @@ _module.createLog = (name, dir) => {
         // let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
-            _message.push(msg.toText());
+            _message.push(convert.toString(msg));
         }
         console.info(_message.join(' '));
         fs.appendFileSync(logObj._infopath, _message.join('') + logObj._newline);
@@ -117,7 +118,7 @@ _module.createLog = (name, dir) => {
         // let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
-            _message.push(msg.toText());
+            _message.push(convert.toString(msg));
         }
         console.warn(_message.join(' '));
         fs.appendFileSync(logObj._warnpath, _message.join('') + logObj._newline);
@@ -127,7 +128,7 @@ _module.createLog = (name, dir) => {
         // let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
-            _message.push(msg.toText());
+            _message.push(convert.toString(msg));
         }
         console.error(_message.join(' '));
         fs.appendFileSync(logObj._errorpath, _message.join('') + logObj._newline);

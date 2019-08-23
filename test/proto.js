@@ -10,11 +10,6 @@ var a = ["a", "c"];
 a.insert(1, "b");
 console.log("插入元素后的数组:", a);
 
-var ss1 = 1;
-var ss2 = "a";
-var ss3 = { "a": 1 };
-console.log("toText:", ss1.toText(), ss2.toText(), ss3.toText());
-
 var url = "http://www.baidu.com";
 console.log("isUrl:", url.isUrl());
 
