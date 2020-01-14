@@ -1,0 +1,232 @@
+<html>
+
+<head>
+    <title>资源服务器Api文档</title>
+</head>
+
+<style>
+    group div {
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;
+        border-top: solid 1px;
+    }
+
+    table tr:hover{ 
+        background: #72d8b657;
+    }
+
+    .title {
+        width: 20%;
+        border-left: solid 1px;
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+    }
+
+    .notes{
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+    }
+
+    .red{
+        color: red;
+    }
+</style>
+
+<body>
+    <group>
+        <fieldset>
+            <div>资源上传接口1</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">Array&lt;JSON&gt;形式的字符串，上传成功后的资源信息，<span class="red">其中id是比较关键的信息，可用于预览、下载等操作</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">普通上传资源接口，可用Postman(form-data)，选择一个文件上传测试</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>资源上传接口2</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/:extend</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes">extend:直接跟在url/后面，扩展参数,可用于保存JSON等数据,实现自定义业务需求,<span class="red">需进行encodeURIComponent</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">Array&lt;JSON&gt;形式的字符串，上传成功后的资源信息，<span class="red">其中id是比较关键的信息，可用于预览、下载等操作</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes"><span class="red">带业务参数</span>上传资源接口，可用Postman(form-data)，选择一个文件上传测试</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>资源上传接口3</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes">extend:扩展参数,可用于保存JSON等数据,实现自定义业务需求,<span class="red">无需进行encodeURIComponent，取值优先级低于url直接传值</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">Array&lt;JSON&gt;形式的字符串，上传成功后的资源信息，<span class="red">其中id是比较关键的信息，可用于预览、下载等操作</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes"><span class="red">带业务参数</span>上传资源接口，可用Postman(form-data)，选择一个文件上传测试</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>资源预览接口</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/:id</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">GET</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes">id:通过上传接口得到的资源id</td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">文件流</td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">用于文件预览，且可直接显示在web网页中，如：&lt;img src="http://ip:port/:id" /&gt;的形式，可以直接显示图片，<span class="red">目前只支持文本/视频/音频/图片的预览，其他格式将返回404</span></td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>资源详情接口</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/:id?action=attribute</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">GET</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes">id:通过上传接口得到的资源id；<span class="red">后面的search(action=attribute)保持一致，请勿修改</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">JSON形式的字符串，包含资源id、文件大小(单位:字节)、文件名称(上传时的文件名称,非服务器上保存的文件名)、上传批次(用于判断同一个请求上传的文件)、扩展参数、上传时间等信息</td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">用于文件信息查看</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>资源下载接口</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/:id?action=download</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">GET</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes">id:通过上传接口得到的资源id；<span class="red">后面的search(action=download)保持一致，请勿修改</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">文件下载流</td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">用于文件下载</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+</body>
+
+</html>

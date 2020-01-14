@@ -1,3 +1,4 @@
+
 require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
@@ -5,6 +6,9 @@ const mysql = require('./lib/db/mysql');
 const redis = require('./lib/db/redis');
 const rabbitmq = require('./lib/queue/rabbitmq');
 const convert = require('./lib/comm/convert');
+const verify = require('./lib/comm/verify');
+const process = require('./lib/comm/process');
+const ip = require('./lib/comm/ip');
 
 let _global = {};
 let _module = {};
@@ -163,4 +167,46 @@ _module.createRedisConn = (connection) => {
     return new redis(connection);
 };
 
+/**
+ * 各种监听服务
+ * @returns
+ */
+_module.service = {};
+
+/**
+ * 启动资源服务器(资源文件的上传、下载等)
+ * @param {JSON} conf 配置文件
+ * @returns
+ */
+_module.service.resource = (conf) => {
+    conf = conf && verify.isJson(conf) ? conf : {};
+    //数据库配置 默认会在数据库里创建一张表 用于保存资源信息
+    conf.mysql = conf.mysql || {
+        host: '127.0.0.1',
+        port: 3306,
+        user: 'root',
+        password: 'root',
+        database: 'mysql',
+        timeout: 10000
+    };
+    //资源服务器监听的端口
+    conf.port = conf.port && verify.isNumber(conf.port) && conf.port > 1 && conf.port <= 65535 ? conf.port : 19468;
+    //允许的最大上传文件大小 单位字节 默认50MB
+    conf.size = conf.size && verify.isNumber(conf.port) ? conf.size : (50 * 1024 * 1024);
+    //资源上传路径 默认为当前目录
+    conf.path = conf.path && verify.isString(conf.path) ? conf.path : path.join(__dirname, '../fa-comm.uploads');
+    if (!fs.existsSync(conf.path)) {
+        fs.mkdirSync(conf.path);
+    }
+    conf = [JSON.stringify(conf)];
+    process.start(path.join(__dirname, './lib/http/resource.js'), conf);
+    setTimeout(() => {
+        console.group('----------------------------------- Api Info -----------------------------------');
+        console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
+        console.info('GET请求用于资源的查看、预览、下载等操作');
+        console.info('POST(form-data)请求用于资源的上传操作,且可带入字符串形式的参,用于业务扩展');
+        console.groupEnd();
+        console.info('----------------------------------- Api Info -----------------------------------');
+    }, 3000);
+};
 module.exports = _module;
