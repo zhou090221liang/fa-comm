@@ -9,6 +9,7 @@ const convert = require('./lib/comm/convert');
 const verify = require('./lib/comm/verify');
 const process = require('./lib/comm/process');
 const ip = require('./lib/comm/ip');
+const _fs = require('./lib/comm/fs');
 
 let _global = {};
 let _module = {};
@@ -196,10 +197,10 @@ _module.service.resource = (conf) => {
     //资源上传路径 默认为当前目录
     conf.path = conf.path && verify.isString(conf.path) ? conf.path : path.join(__dirname, '../fa-comm.uploads');
     if (!fs.existsSync(conf.path)) {
-        fs.mkdirSync(conf.path);
+        _fs.mkdirSync(conf.path);
     }
     conf = [JSON.stringify(conf)];
-    process.start(path.join(__dirname, './lib/http/resource.js'), conf);
+    process.start(path.join(__dirname, './lib/http/resource.js'), conf, null, true, false);
     setTimeout(() => {
         console.group('----------------------------------- Api Info -----------------------------------');
         console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
@@ -209,4 +210,40 @@ _module.service.resource = (conf) => {
         console.info('----------------------------------- Api Info -----------------------------------');
     }, 3000);
 };
+
+// /**
+//  * 启动Api接口服务器(提供接口服务)
+//  * @param {JSON} conf 配置文件
+//  * @returns
+//  */
+// _module.service.api = (conf) => {
+//     conf = conf && verify.isJson(conf) ? conf : {};
+//     //数据库配置
+//     conf.mysql = conf.mysql || {
+//         host: '127.0.0.1',
+//         port: 3306,
+//         user: 'root',
+//         password: 'root',
+//         database: 'mysql',
+//         timeout: 10000
+//     };
+//     //redis配置
+//     conf.redis = conf.redis || {
+//         host: '127.0.0.1',
+//         port: 6379,
+//         password: ''
+//     };
+//     //Api服务器监听的端口
+//     conf.port = conf.port && verify.isNumber(conf.port) && conf.port > 1 && conf.port <= 65535 ? conf.port : 19469;
+//     //Api服务器对应的业务代码存放目录
+//     conf.root = conf.root = conf.root && verify.isString(conf.root) ? conf.root : path.join(__dirname, '../../app');
+//     //加载所有的路由信息
+//     let routers = [];
+//     let files = _fs.findfilesSync(conf.root);
+//     //拦截器规则 TODO
+//     //-----------------------------------
+//     conf = [JSON.stringify(conf)];
+//     process.start(path.join(__dirname, './lib/http/api.js'), conf, null, true, false);
+// };
+
 module.exports = _module;

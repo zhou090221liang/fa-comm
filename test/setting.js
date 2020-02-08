@@ -10,5 +10,8 @@ module.exports = {
     port: {
         api: 8080,
         resource: 8081
+    },
+    redis: {
+        password: 'zhou090221liang'
     }
 };
