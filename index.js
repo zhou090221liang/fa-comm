@@ -241,8 +241,32 @@ _module.service.api = (options) => {
         //Api服务器对应的业务代码存放目录
         options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
         //中间件目录
-        options.middleware = options.middleware && verify.isString(options.middleware) ? options.middleware : null;
+        // options.middleware && verify.isString(options.middleware) ? options.middleware : null;
+        let _middleware = null;
+        if (options.middleware && verify.isString(options.middleware) && fs.existsSync(options.middleware)) {
+            _middleware = options.middleware;
+        }
+        let middlewarePath = options.root;
+        if (!middlewarePath.endWith(path.sep)) {
+            middlewarePath += path.sep + 'middleware';
+        }
+        if (fs.existsSync(middlewarePath)) {
+            _middleware = middlewarePath;
+        }
+        if (_middleware) {
+            options.middleware = _middleware;
+        }
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
+        setTimeout(() => {
+            console.group('----------------------------------- Api Info -----------------------------------');
+            console.info('Api服务,目前已经实现的内容(必须需要的服务mysql、redis)：');
+            console.info('1、HTTP/1.1 监听，监听端口默认19469，可在配置文件中自定义port');
+            console.info('2、配置文件可自定义配置项root（Api服务器对应的业务代码存放目录）及middleware（中间件目录）');
+            console.info('3、接口定义，参考test/api/routers.js');
+            console.info('4、各种定义，参考test/api/，该目录可理解为demo');
+            console.groupEnd();
+            console.info('----------------------------------- Api Info -----------------------------------');
+        }, 3000);
     } catch (e) {
         console.error(e);
     }
