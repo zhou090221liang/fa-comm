@@ -7,10 +7,7 @@ module.exports = {
         database: 'vasp',
         timeout: 10000
     },
-    port: {
-        api: 8080,
-        resource: 8081
-    },
+    port: 8080,
     redis: {
         password: 'zhou090221liang'
     }

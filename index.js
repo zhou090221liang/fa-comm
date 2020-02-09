@@ -7,7 +7,7 @@ const redis = require('./lib/db/redis');
 const rabbitmq = require('./lib/queue/rabbitmq');
 const convert = require('./lib/comm/convert');
 const verify = require('./lib/comm/verify');
-const process = require('./lib/comm/process');
+const _process = require('./lib/comm/process');
 const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
 
@@ -200,7 +200,7 @@ _module.service.resource = (conf) => {
         _fs.mkdirSync(conf.path);
     }
     conf = [JSON.stringify(conf)];
-    process.start(path.join(__dirname, './lib/http/resource.js'), conf, null, true, false);
+    _process.start(path.join(__dirname, './lib/http/resource.js'), conf, null, true, false);
     setTimeout(() => {
         console.group('----------------------------------- Api Info -----------------------------------');
         console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
@@ -211,39 +211,69 @@ _module.service.resource = (conf) => {
     }, 3000);
 };
 
-// /**
-//  * 启动Api接口服务器(提供接口服务)
-//  * @param {JSON} conf 配置文件
-//  * @returns
-//  */
-// _module.service.api = (conf) => {
-//     conf = conf && verify.isJson(conf) ? conf : {};
-//     //数据库配置
-//     conf.mysql = conf.mysql || {
-//         host: '127.0.0.1',
-//         port: 3306,
-//         user: 'root',
-//         password: 'root',
-//         database: 'mysql',
-//         timeout: 10000
-//     };
-//     //redis配置
-//     conf.redis = conf.redis || {
-//         host: '127.0.0.1',
-//         port: 6379,
-//         password: ''
-//     };
-//     //Api服务器监听的端口
-//     conf.port = conf.port && verify.isNumber(conf.port) && conf.port > 1 && conf.port <= 65535 ? conf.port : 19469;
-//     //Api服务器对应的业务代码存放目录
-//     conf.root = conf.root = conf.root && verify.isString(conf.root) ? conf.root : path.join(__dirname, '../../app');
-//     //加载所有的路由信息
-//     let routers = [];
-//     let files = _fs.findfilesSync(conf.root);
-//     //拦截器规则 TODO
-//     //-----------------------------------
-//     conf = [JSON.stringify(conf)];
-//     process.start(path.join(__dirname, './lib/http/api.js'), conf, null, true, false);
-// };
+/**
+ * 启动Api接口服务器(提供接口服务)
+ * @param {JSON} options 配置文件
+ * @returns
+ */
+_module.service.api = (options) => {
+    try {
+        options = options || {};
+        //数据库配置
+        options.mysql = options.mysql || {
+            host: '127.0.0.1',
+            port: 3306,
+            user: 'root',
+            password: 'root',
+            database: 'mysql',
+            timeout: 10000
+        };
+        //redis配置
+        options.redis = options.redis || {
+            host: '127.0.0.1',
+            port: 6379,
+            password: ''
+        };
+        //Api服务器监听的端口
+        options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19469;
+        //Api服务器对应的业务代码存放目录
+        options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
+        //中间件目录
+        options.middleware = options.middleware && verify.isString(options.middleware) ? options.middleware : null;
+        _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+/**
+ * 解析路由业务文件
+ * @param {*} _path
+ * @returns
+ */
+_module.service.analyzing = (_path) => {
+    let result = {};
+    if (!_path.endWith(path.sep)) {
+        _path += path.sep;
+    }
+    const files = _fs.findfilesSync(_path);
+    files.forEach((file, index) => {
+        const basename = path.basename(file);
+        const extname = path.extname(basename);
+        let tmp = file.replace(_path, '').split(path.sep);
+        let _result = result;
+        tmp.forEach((t, _index) => {
+            if (t == basename) {
+                _result[t.replace(extname, '')] = require(file);
+            } else {
+                if (!_result[t]) {
+                    _result[t] = {};
+                }
+                _result = _result[t];
+            }
+        });
+    });
+    return result;
+}
 
 module.exports = _module;
