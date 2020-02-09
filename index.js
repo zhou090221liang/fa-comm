@@ -10,6 +10,7 @@ const verify = require('./lib/comm/verify');
 const _process = require('./lib/comm/process');
 const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
+const sdk = require('./lib/comm/sdk');
 
 let _global = {};
 let _module = {};
@@ -25,6 +26,7 @@ _module.random = require('./lib/comm/random');
 _module.req = require('./lib/comm/req');
 _module.system = require('./lib/comm/system');
 _module.verify = require('./lib/comm/verify');
+_module.sdk = sdk;
 
 /**
  * 全局对象

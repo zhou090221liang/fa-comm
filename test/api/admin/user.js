@@ -6,17 +6,17 @@ module.exports = {
     list: async (req) => {
         const sql = "select 1 id,'张三' name from dual limit 1;";
         const result = await mysql.query(sql);
-        return result;
+        return new comm.sdk.UnifiedStyleMessage(result);
     },
     detail: async (req) => {
         const id = req.params.id;
         const sql = "select 1 id,'张三' name from dual limit 1;";
         const result = await mysql.query(sql);
-        return result[0];
+        return new comm.sdk.UnifiedStyleMessage(result[0]);
     },
     add: async (req) => {
         const user = req.body;
         user.id = comm.guid.v22;
-        return user.id;
+        return new comm.sdk.UnifiedStyleMessage(user.id);
     },
 };
