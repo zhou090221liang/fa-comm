@@ -230,12 +230,12 @@ _module.service.api = (options) => {
             database: 'mysql',
             timeout: 10000
         };
-        //redis配置
-        options.redis = options.redis || {
-            host: '127.0.0.1',
-            port: 6379,
-            password: ''
-        };
+        // //redis配置
+        // options.redis = options.redis || {
+        //     host: '127.0.0.1',
+        //     port: 6379,
+        //     password: ''
+        // };
         //Api服务器监听的端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19469;
         //Api服务器对应的业务代码存放目录
@@ -259,14 +259,55 @@ _module.service.api = (options) => {
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
             console.group('----------------------------------- Api Info -----------------------------------');
-            console.info('Api服务,目前已经实现的内容(必须需要的服务mysql、redis)：');
-            console.info('1、HTTP/1.1 监听，监听端口默认19469，可在配置文件中自定义port');
+            console.info('Api服务,目前已经实现的内容(必须需要的服务mysql)：');
+            console.info(`1、HTTP/1.1 监听，监听端口默认19469${options.port != 19469 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
             console.info('2、配置文件可自定义配置项root（Api服务器对应的业务代码存放目录）及middleware（中间件目录）');
             console.info('3、接口定义，参考test/api/routers.js');
             console.info('4、各种定义，参考test/api/，该目录可理解为demo');
             console.groupEnd();
             console.info('----------------------------------- Api Info -----------------------------------');
         }, 3000);
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+/**
+ * 启动Socket接口服务器(提供WebSocket服务)
+ * @param {JSON} options 配置文件
+ * @returns
+ */
+_module.service.websocket = _module.service.ws = async (options) => {
+    try {
+        options = options || {};
+        //数据库配置
+        options.mysql = options.mysql || {
+            host: '127.0.0.1',
+            port: 3306,
+            user: 'root',
+            password: 'root',
+            database: 'mysql',
+            timeout: 10000
+        };
+        //端口
+        options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19467;
+        //服务器对应的业务代码存放目录
+        options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
+        // _process.start(path.join(__dirname, './lib/http/socket.js'), [JSON.stringify(options)], null, true, false);
+
+        setTimeout(() => {
+            console.group('----------------------------------- Socket Info -----------------------------------');
+            console.info('Socket服务,目前已经实现的内容(必须需要的服务mysql)：');
+            console.info(`1、WebSocket服务端 监听，监听端口默认19467${options.port != 19467 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
+            console.info('2、配置文件可自定义配置项root（Socket服务器对应的业务代码存放目录）');
+            console.groupEnd();
+            console.info('----------------------------------- Socket Info -----------------------------------');
+        }, 3000);
+
+        const socket = require('./lib/http/socket');
+        const server = await socket.createServer(options);
+        return server;
+
     } catch (e) {
         console.error(e);
     }

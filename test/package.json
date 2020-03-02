@@ -6,8 +6,12 @@
     "scripts": {
         "resource:dev": "node --inspect-brk=127.0.0.1:39229 resource.js",
         "resource": "node resource.js",
-        "api:dev": "cd api/ && node --inspect-brk=127.0.0.1:39229 app.js",
-        "api": "cd api/ && node app.js"
+        "api:dev": "cd api/ && node --inspect-brk=127.0.0.1:39230 app.js",
+        "api": "cd api/ && node app.js",
+        "socketServer:dev": "cd socket/ && node --inspect-brk=127.0.0.1:39231 server.js",
+        "socketServer": "cd socket/ && node server.js",
+        "socketClient:dev": "cd socket/ && node --inspect-brk=127.0.0.1:39232 client.js",
+        "socketClient": "cd socket/ && node client.js"
     },
     "dependencies": {}
 }

@@ -1,0 +1,34 @@
+<html>
+
+<body>
+    <script src="../../node_modules/socket.io-client/dist/socket.io.js"></script>
+    <textarea readonly style="width: 100%;min-width: 100%;height: 400px;" id="message"></textarea>
+    <script>
+        window.onload = function () {
+            var client = io('http://localhost:19467');
+            client.on('connection', function (msg) {
+                msg = 'client:' + client.id + ' receive2 msg:' + msg;
+                console.log(msg);
+                document.getElementById('message').append(msg + "\n");
+                client.emit('test', 'AAAAA', 'BBBB', 'CCCC', JSON.stringify({ "name": "张" }));
+            });
+            client.on('test', function (msg) {
+                msg = 'client:' + client.id + ' receive2 msg:' + msg;
+                console.log(msg);
+                document.getElementById('message').append(msg + "\n");
+            });
+            client.on('clientonline', function (msg) {
+                msg = 'client:' + client.id + ' receive2 客户端上线 msg:' + msg;
+                console.log(msg);
+                document.getElementById('message').append(msg + "\n");
+            });
+            client.on('clientoffline', function (msg) {
+                msg = 'client:' + client.id + ' receive2 客户端下线 msg:' + msg;
+                console.log(msg);
+                document.getElementById('message').append(msg + "\n");
+            });
+        }
+    </script>
+</body>
+
+</html>
