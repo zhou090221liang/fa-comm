@@ -3,6 +3,7 @@ require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
 const mysql = require('./lib/db/mysql');
+const sqlite3 = require('./lib/db/sqlite3');
 const redis = require('./lib/db/redis');
 const rabbitmq = require('./lib/queue/rabbitmq');
 const convert = require('./lib/comm/convert');
@@ -12,7 +13,10 @@ const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
 const sdk = require('./lib/comm/sdk');
 
-let _global = {};
+
+let _global = {
+    sqlite3DbName: "fa-comm.db"
+};
 let _module = {};
 
 _module.convert = require('./lib/comm/convert');
@@ -27,6 +31,61 @@ _module.req = require('./lib/comm/req');
 _module.system = require('./lib/comm/system');
 _module.verify = require('./lib/comm/verify');
 _module.sdk = sdk;
+_module.sqlite3 = sqlite3;
+
+async function init() {
+    const db = new sqlite3(_global.sqlite3DbName);
+    const api_log = `\
+        create table if not exists api_log(
+            id char(22) primary key not null,
+            qid char(22) NOT NULL,
+            pid char(20) NOT NULL,
+            ip char(30) NOT NULL,
+            url text,
+            path text,
+            method char(50),
+            query text,
+            params text,
+            body text,
+            headers text,
+            req_time datetime,
+            res_status int,
+            res_message text,
+            res_time datetime
+        );\
+    `;
+    await db.run(api_log, null, false);
+    const resource = `\
+        create table if not exists upload(\
+            id char(32) primary key not null, \
+            size bigint, \
+            form varchar(200), \
+            origin_name varchar(500), \
+            type varchar(200), \
+            boundary varchar(500), \
+            file_name varchar(500), \
+            path text, \
+            md5 char(32), \
+            batch char(22), \
+            upload_time datetime, \
+            extend text
+        );\
+    `;
+    await db.run(resource, null, false);
+    const socket_log = "\
+        create table if not exists socket_log( \
+            id char(22) primary key not null, \
+            from varchar(50) NOT NULL, \
+            to varchar(50) NOT NULL, \
+            pid char(20) NOT NULL, \
+            url text, \
+            body text, \
+            send_time datetime \
+        );\
+    ";
+    await db.run(socket_log, null, false);
+}
+init();
 
 /**
  * 全局对象
@@ -183,15 +242,15 @@ _module.service = {};
  */
 _module.service.resource = (conf) => {
     conf = conf && verify.isJson(conf) ? conf : {};
-    //数据库配置 默认会在数据库里创建一张表 用于保存资源信息
-    conf.mysql = conf.mysql || {
-        host: '127.0.0.1',
-        port: 3306,
-        user: 'root',
-        password: 'root',
-        database: 'mysql',
-        timeout: 10000
-    };
+    // //数据库配置 默认会在数据库里创建一张表 用于保存资源信息
+    // conf.mysql = conf.mysql || {
+    //     host: '127.0.0.1',
+    //     port: 3306,
+    //     user: 'root',
+    //     password: 'root',
+    //     database: 'mysql',
+    //     timeout: 10000
+    // };
     //资源服务器监听的端口
     conf.port = conf.port && verify.isNumber(conf.port) && conf.port > 1 && conf.port <= 65535 ? conf.port : 19468;
     //允许的最大上传文件大小 单位字节 默认50MB
@@ -221,15 +280,15 @@ _module.service.resource = (conf) => {
 _module.service.api = (options) => {
     try {
         options = options || {};
-        //数据库配置
-        options.mysql = options.mysql || {
-            host: '127.0.0.1',
-            port: 3306,
-            user: 'root',
-            password: 'root',
-            database: 'mysql',
-            timeout: 10000
-        };
+        // //数据库配置
+        // options.mysql = options.mysql || {
+        //     host: '127.0.0.1',
+        //     port: 3306,
+        //     user: 'root',
+        //     password: 'root',
+        //     database: 'mysql',
+        //     timeout: 10000
+        // };
         // //redis配置
         // options.redis = options.redis || {
         //     host: '127.0.0.1',
@@ -259,7 +318,7 @@ _module.service.api = (options) => {
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
             console.group('----------------------------------- Api Info -----------------------------------');
-            console.info('Api服务,目前已经实现的内容(必须需要的服务mysql)：');
+            console.info('Api服务,目前已经实现的内容：');
             console.info(`1、HTTP/1.1 监听，监听端口默认19469${options.port != 19469 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
             console.info('2、配置文件可自定义配置项root（Api服务器对应的业务代码存放目录）及middleware（中间件目录）');
             console.info('3、接口定义，参考test/api/routers.js');
@@ -280,15 +339,15 @@ _module.service.api = (options) => {
 _module.service.websocket = _module.service.ws = async (options) => {
     try {
         options = options || {};
-        //数据库配置
-        options.mysql = options.mysql || {
-            host: '127.0.0.1',
-            port: 3306,
-            user: 'root',
-            password: 'root',
-            database: 'mysql',
-            timeout: 10000
-        };
+        // //数据库配置
+        // options.mysql = options.mysql || {
+        //     host: '127.0.0.1',
+        //     port: 3306,
+        //     user: 'root',
+        //     password: 'root',
+        //     database: 'mysql',
+        //     timeout: 10000
+        // };
         //端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19467;
         //服务器对应的业务代码存放目录
@@ -297,7 +356,7 @@ _module.service.websocket = _module.service.ws = async (options) => {
 
         setTimeout(() => {
             console.group('----------------------------------- Socket Info -----------------------------------');
-            console.info('Socket服务,目前已经实现的内容(必须需要的服务mysql)：');
+            console.info('Socket服务,目前已经实现的内容：');
             console.info(`1、WebSocket服务端 监听，监听端口默认19467${options.port != 19467 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
             console.info('2、配置文件可自定义配置项root（Socket服务器对应的业务代码存放目录）');
             console.groupEnd();

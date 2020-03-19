@@ -4,6 +4,7 @@
     "description": "fa-comm test",
     "author": "zxy<zxy@zhouxiaoyue.cn>",
     "scripts": {
+        "dev": "node --inspect-brk=127.0.0.1:39229 index.js",
         "resource:dev": "node --inspect-brk=127.0.0.1:39229 resource.js",
         "resource": "node resource.js",
         "api:dev": "cd api/ && node --inspect-brk=127.0.0.1:39230 app.js",

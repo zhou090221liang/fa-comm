@@ -1,12 +1,10 @@
 const comm = require('../../index');
-const conf = require('../setting');
 const log = comm.createLog('fa-comm.socket');
-conf.port = 19467;
 const user = require('./api/user');
 
 (async () => {
-    // const service = await comm.service.ws(conf);
-    const service = await comm.service.websocket(conf);
+    // const service = await comm.service.ws();
+    const service = await comm.service.websocket();
     service.on('connection', function (socketid) {
         service.send(socketid, 'connection', 'welcome:' + socketid);
         service.broadcast('clientonline', socketid);
