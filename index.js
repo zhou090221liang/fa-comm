@@ -12,10 +12,12 @@ const _process = require('./lib/comm/process');
 const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
 const sdk = require('./lib/comm/sdk');
-
+const db = require('./resource/db');
+db();
+const conf = require('./resource/conf');
 
 let _global = {
-    sqlite3DbName: "fa-comm.db"
+    sqlite3DbName: conf.sqlite3DbName
 };
 let _module = {};
 
@@ -32,60 +34,6 @@ _module.system = require('./lib/comm/system');
 _module.verify = require('./lib/comm/verify');
 _module.sdk = sdk;
 _module.sqlite3 = sqlite3;
-
-async function init() {
-    const db = new sqlite3(_global.sqlite3DbName);
-    const api_log = `\
-        create table if not exists api_log(
-            id char(22) primary key not null,
-            qid char(22) NOT NULL,
-            pid char(20) NOT NULL,
-            ip char(30) NOT NULL,
-            url text,
-            path text,
-            method char(50),
-            query text,
-            params text,
-            body text,
-            headers text,
-            req_time datetime,
-            res_status int,
-            res_message text,
-            res_time datetime
-        );\
-    `;
-    await db.run(api_log, null, false);
-    const resource = `\
-        create table if not exists upload(\
-            id char(32) primary key not null, \
-            size bigint, \
-            form varchar(200), \
-            origin_name varchar(500), \
-            type varchar(200), \
-            boundary varchar(500), \
-            file_name varchar(500), \
-            path text, \
-            md5 char(32), \
-            batch char(22), \
-            upload_time datetime, \
-            extend text
-        );\
-    `;
-    await db.run(resource, null, false);
-    const socket_log = "\
-        create table if not exists socket_log( \
-            id char(22) primary key not null, \
-            from varchar(50) NOT NULL, \
-            to varchar(50) NOT NULL, \
-            pid char(20) NOT NULL, \
-            url text, \
-            body text, \
-            send_time datetime \
-        );\
-    ";
-    await db.run(socket_log, null, false);
-}
-init();
 
 /**
  * 全局对象
