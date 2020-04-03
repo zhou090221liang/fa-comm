@@ -1,2 +1,6 @@
 const comm = require('../../index');
-comm.service.api();
+const path = require('path');
+comm.service.api({
+    port: 8080,
+    static: path.join(__dirname, './static')
+});
