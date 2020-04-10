@@ -1,6 +1,6 @@
 {
   "name": "fa-comm",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "通用方法全聚合",
   "author": "zxy<zxy@zhouxiaoyue.cn>",
   "main": "./index.js",
@@ -30,6 +30,7 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "sqlite3": "^4.1.1",
-    "mmmagic": "^0.5.3"
+    "mmmagic": "^0.5.3",
+    "nodemailer": "^6.4.6"
   }
 }

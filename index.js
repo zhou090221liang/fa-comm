@@ -13,6 +13,7 @@ const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
 const sdk = require('./lib/comm/sdk');
 const db = require('./resource/db');
+const mail = require('./lib/mail');
 db();
 const conf = require('./resource/conf');
 
@@ -34,6 +35,7 @@ _module.system = require('./lib/comm/system');
 _module.verify = require('./lib/comm/verify');
 _module.sdk = sdk;
 _module.sqlite3 = sqlite3;
+_module.mail = mail;
 
 /**
  * 全局对象
