@@ -1,5 +1,5 @@
 const fac = require('../index');
-const setting = require('./setting');
 fac.service.resource({
-    mysql: setting.mysql
+    port: 8080,
+    size: 100
 });

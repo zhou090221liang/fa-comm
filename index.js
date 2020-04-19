@@ -187,13 +187,13 @@ _module.service = {};
 
 /**
  * 启动资源服务器(资源文件的上传、下载等)
- * @param {JSON} conf 配置文件
+ * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.resource = (conf) => {
-    conf = conf && verify.isJson(conf) ? conf : {};
+_module.service.resource = (options) => {
+    options = options && verify.isJson(options) ? options : {};
     // //数据库配置 默认会在数据库里创建一张表 用于保存资源信息
-    // conf.mysql = conf.mysql || {
+    // options.mysql = options.mysql || {
     //     host: '127.0.0.1',
     //     port: 3306,
     //     user: 'root',
@@ -202,24 +202,40 @@ _module.service.resource = (conf) => {
     //     timeout: 10000
     // };
     //资源服务器监听的端口
-    conf.port = conf.port && verify.isNumber(conf.port) && conf.port > 1 && conf.port <= 65535 ? conf.port : 19468;
+    options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19468;
     //允许的最大上传文件大小 单位字节 默认50MB
-    conf.size = conf.size && verify.isNumber(conf.port) ? conf.size : (50 * 1024 * 1024);
+    options.size = options.size && verify.isNumber(options.port) ? options.size : (10 * 1024 * 1024);
     //资源上传路径 默认为当前目录
-    conf.path = conf.path && verify.isString(conf.path) ? conf.path : path.join(__dirname, '../fa-comm.uploads');
-    if (!fs.existsSync(conf.path)) {
-        _fs.mkdirSync(conf.path);
+    options.path = options.path && verify.isString(options.path) ? options.path : path.join(__dirname, '../fa-comm.uploads');
+    if (!fs.existsSync(options.path)) {
+        _fs.mkdirSync(options.path);
     }
-    conf = [JSON.stringify(conf)];
-    _process.start(path.join(__dirname, './lib/http/resource.js'), conf, null, true, false);
+    _process.start(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
+    // setTimeout(() => {
+    //     console.group('----------------------------------- Resource Info -----------------------------------');
+    //     console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
+    //     console.info('GET请求用于资源的查看、预览、下载等操作');
+    //     console.info('POST(form-data)请求用于资源的上传操作,且可带入字符串形式的参,用于业务扩展');
+    //     console.groupEnd();
+    //     console.info('----------------------------------- Resource Info -----------------------------------');
+    // }, 5000);
+
     setTimeout(() => {
-        console.group('----------------------------------- Api Info -----------------------------------');
-        console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
-        console.info('GET请求用于资源的查看、预览、下载等操作');
-        console.info('POST(form-data)请求用于资源的上传操作,且可带入字符串形式的参,用于业务扩展');
+        console.group('----------------------------------- Resource Info -----------------------------------');
+        console.info(`Resource服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+        console.info('1、Resource(HTTP/1.1) 监听');
+        console.info('2、自定义监听端口');
+        console.info('3、自定义允许的最大上传文件大小');
+        console.info('4、自定义资源上传路径');
+        console.info('5、自定义框架日志目录');
+        console.info('自定义配置项如下：');
+        console.info('      1) port，该配置项为Resource监听的端口，如不配置，或配置错误，默认使用19468');
+        console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位MB，如不配置，默认10MB。');
+        console.info('      3) path，该配置项为一个目录，该目录用于存放上传的资源文件，如不配置，默认为当前启动文件所在目录下的fa-comm.uploads目录下。');
+        console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
         console.groupEnd();
-        console.info('----------------------------------- Api Info -----------------------------------');
-    }, 3000);
+        console.info('----------------------------------- Resource Info -----------------------------------');
+    }, 5000);
 };
 
 /**
@@ -268,14 +284,23 @@ _module.service.api = (options) => {
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
             console.group('----------------------------------- Api Info -----------------------------------');
-            console.info('Api服务,目前已经实现的内容：');
-            console.info(`1、HTTP/1.1 监听，监听端口默认19469${options.port != 19469 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
-            console.info('2、配置文件可自定义配置项root（Api服务器对应的业务代码存放目录）及middleware（中间件目录）');
-            console.info('3、接口定义，参考test/api/routers.js');
-            console.info('4、各种定义，参考test/api/，该目录可理解为demo');
+            console.info(`Api服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+            console.info('1、HTTP/1.1 监听');
+            console.info('2、自定义监听端口');
+            console.info('3、自定义业务代码目录');
+            console.info('4、自定义Api接口');
+            console.info('5、自定义Api接口中间件');
+            console.info('6、自定义静态资源目录');
+            console.info('7、自定义框架日志目录');
+            console.info('自定义配置项如下：');
+            console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用19469');
+            console.info('      2) root，该配置项为一个目录，用于存放业务代码文件，如不配置，默认业务代码目录为当前启动文件所在目录。业务文件代码编写方式，请查看demo，主要由router.js及对应的执行器文件组成。');
+            console.info('      3) middleware，该配置项为一个目录，该目录用于存放中间件代码文件，中间件执行顺序按照文件名排列顺序执行，如需自定义执行顺序，可通过定义文件名进行排序执行，如不配置，默认将不使用中间件。中间件代码编写方式，请查看demo。');
+            console.info('      4) static，该配置项为一个目录，用于存放静态资源文件，如不配置，默认不使用静态资源');
+            console.info('      5) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.groupEnd();
             console.info('----------------------------------- Api Info -----------------------------------');
-        }, 3000);
+        }, 5000);
     } catch (e) {
         console.error(e);
     }
@@ -300,18 +325,31 @@ _module.service.websocket = _module.service.ws = async (options) => {
         // };
         //端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19467;
-        //服务器对应的业务代码存放目录
-        options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
+        // //服务器对应的业务代码存放目录
+        // options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
         // _process.start(path.join(__dirname, './lib/http/socket.js'), [JSON.stringify(options)], null, true, false);
+
+        // setTimeout(() => {
+        //     console.group('----------------------------------- Socket Info -----------------------------------');
+        //     console.info('Socket服务,目前已经实现的内容：');
+        //     console.info(`1、WebSocket服务端 监听，监听端口默认19467${options.port != 19467 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
+        //     console.info('2、配置文件可自定义配置项root（Socket服务器对应的业务代码存放目录）');
+        //     console.groupEnd();
+        //     console.info('----------------------------------- Socket Info -----------------------------------');
+        // }, 5000);
 
         setTimeout(() => {
             console.group('----------------------------------- Socket Info -----------------------------------');
-            console.info('Socket服务,目前已经实现的内容：');
-            console.info(`1、WebSocket服务端 监听，监听端口默认19467${options.port != 19467 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
-            console.info('2、配置文件可自定义配置项root（Socket服务器对应的业务代码存放目录）');
+            console.info(`Socket服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+            console.info('1、WebSocket服务端 监听');
+            console.info('2、自定义监听端口');
+            console.info('3、自定义框架日志目录');
+            console.info('自定义配置项如下：');
+            console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用19467');
+            console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.groupEnd();
             console.info('----------------------------------- Socket Info -----------------------------------');
-        }, 3000);
+        }, 5000);
 
         const socket = require('./lib/http/socket');
         const server = await socket.createServer(options);
