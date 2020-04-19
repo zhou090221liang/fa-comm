@@ -217,7 +217,7 @@ _module.service.resource = (options) => {
         options.sqlite3file = _global.sqlite3DbName;
     }
     const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-    const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+    const sqlite3Obj = new sqlite3(options.sqlite3file, false);
     for (const file of files) {
         const sql = fs.readFileSync(file).toString();
         sqlite3Obj.run(sql);
@@ -279,7 +279,7 @@ _module.service.api = (options) => {
             options.sqlite3file = _global.sqlite3DbName;
         }
         const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-        const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
         for (const file of files) {
             const sql = fs.readFileSync(file).toString();
             sqlite3Obj.run(sql);
@@ -330,7 +330,7 @@ _module.service.websocket = _module.service.ws = async (options) => {
             options.sqlite3file = _global.sqlite3DbName;
         }
         const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-        const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
         for (const file of files) {
             const sql = fs.readFileSync(file).toString();
             sqlite3Obj.run(sql);
