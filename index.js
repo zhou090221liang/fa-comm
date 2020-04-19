@@ -21,7 +21,7 @@ const _system = require('./lib/comm/system');
 // const db = require('./resource/db');
 const mail = require('./lib/mail');
 // db();
-const conf = require('./resource/conf');
+// const conf = require('./resource/conf');
 
 let _global = {
     sqlite3DbName: 'fa-comm.db'
