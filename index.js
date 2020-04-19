@@ -12,27 +12,33 @@ const _process = require('./lib/comm/process');
 const ip = require('./lib/comm/ip');
 const _fs = require('./lib/comm/fs');
 const sdk = require('./lib/comm/sdk');
-const db = require('./resource/db');
+const guid = require('./lib/comm/guid');
+const live = require('./lib/comm/live');
+const _progress = require('./lib/comm/progress');
+const random = require('./lib/comm/random');
+const _req = require('./lib/comm/req');
+const _system = require('./lib/comm/system');
+// const db = require('./resource/db');
 const mail = require('./lib/mail');
-db();
+// db();
 const conf = require('./resource/conf');
 
 let _global = {
-    sqlite3DbName: conf.sqlite3DbName
+    sqlite3DbName: 'fa-comm.db'
 };
 let _module = {};
 
-_module.convert = require('./lib/comm/convert');
-_module.fs = require('./lib/comm/fs');
-_module.guid = require('./lib/comm/guid');
-_module.ip = require('./lib/comm/ip');
-_module.live = require('./lib/comm/live');
-_module.process = require('./lib/comm/process');
-_module.progress = require('./lib/comm/progress');
-_module.random = require('./lib/comm/random');
-_module.req = require('./lib/comm/req');
-_module.system = require('./lib/comm/system');
-_module.verify = require('./lib/comm/verify');
+_module.convert = convert;
+_module.fs = _fs;
+_module.guid = guid;
+_module.ip = ip;
+_module.live = live;
+_module.process = _process;
+_module.progress = _progress;
+_module.random = random;
+_module.req = _req;
+_module.system = _system;
+_module.verify = verify;
 _module.sdk = sdk;
 _module.sqlite3 = sqlite3;
 _module.mail = mail;
@@ -192,15 +198,6 @@ _module.service = {};
  */
 _module.service.resource = (options) => {
     options = options && verify.isJson(options) ? options : {};
-    // //数据库配置 默认会在数据库里创建一张表 用于保存资源信息
-    // options.mysql = options.mysql || {
-    //     host: '127.0.0.1',
-    //     port: 3306,
-    //     user: 'root',
-    //     password: 'root',
-    //     database: 'mysql',
-    //     timeout: 10000
-    // };
     //资源服务器监听的端口
     options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19468;
     //允许的最大上传文件大小 单位字节 默认50MB
@@ -210,15 +207,23 @@ _module.service.resource = (options) => {
     if (!fs.existsSync(options.path)) {
         _fs.mkdirSync(options.path);
     }
+
+    //sqlite3file
+    options.sqlite3file = options.db;
+    if (options.sqlite3file) {
+        _fs.mkdirSync(options.sqlite3file);
+        options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+    } else {
+        options.sqlite3file = _global.sqlite3DbName;
+    }
+    const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+    const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+    for (const file of files) {
+        const sql = fs.readFileSync(file).toString();
+        sqlite3Obj.run(sql);
+    }
+
     _process.start(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
-    // setTimeout(() => {
-    //     console.group('----------------------------------- Resource Info -----------------------------------');
-    //     console.info(`详细Api请参考:http://${ip.local}:${JSON.parse(conf[0]).port}`);
-    //     console.info('GET请求用于资源的查看、预览、下载等操作');
-    //     console.info('POST(form-data)请求用于资源的上传操作,且可带入字符串形式的参,用于业务扩展');
-    //     console.groupEnd();
-    //     console.info('----------------------------------- Resource Info -----------------------------------');
-    // }, 5000);
 
     setTimeout(() => {
         console.group('----------------------------------- Resource Info -----------------------------------');
@@ -246,27 +251,11 @@ _module.service.resource = (options) => {
 _module.service.api = (options) => {
     try {
         options = options || {};
-        // //数据库配置
-        // options.mysql = options.mysql || {
-        //     host: '127.0.0.1',
-        //     port: 3306,
-        //     user: 'root',
-        //     password: 'root',
-        //     database: 'mysql',
-        //     timeout: 10000
-        // };
-        // //redis配置
-        // options.redis = options.redis || {
-        //     host: '127.0.0.1',
-        //     port: 6379,
-        //     password: ''
-        // };
         //Api服务器监听的端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19469;
         //Api服务器对应的业务代码存放目录
         options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
         //中间件目录
-        // options.middleware && verify.isString(options.middleware) ? options.middleware : null;
         let _middleware = null;
         if (options.middleware && verify.isString(options.middleware) && fs.existsSync(options.middleware)) {
             _middleware = options.middleware;
@@ -281,6 +270,21 @@ _module.service.api = (options) => {
         if (_middleware) {
             options.middleware = _middleware;
         }
+        //sqlite3file
+        options.sqlite3file = options.db;
+        if (options.sqlite3file) {
+            _fs.mkdirSync(options.sqlite3file);
+            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+        } else {
+            options.sqlite3file = _global.sqlite3DbName;
+        }
+        const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+        for (const file of files) {
+            const sql = fs.readFileSync(file).toString();
+            sqlite3Obj.run(sql);
+        }
+
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
             console.group('----------------------------------- Api Info -----------------------------------');
@@ -314,29 +318,26 @@ _module.service.api = (options) => {
 _module.service.websocket = _module.service.ws = async (options) => {
     try {
         options = options || {};
-        // //数据库配置
-        // options.mysql = options.mysql || {
-        //     host: '127.0.0.1',
-        //     port: 3306,
-        //     user: 'root',
-        //     password: 'root',
-        //     database: 'mysql',
-        //     timeout: 10000
-        // };
         //端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19467;
-        // //服务器对应的业务代码存放目录
-        // options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
-        // _process.start(path.join(__dirname, './lib/http/socket.js'), [JSON.stringify(options)], null, true, false);
 
-        // setTimeout(() => {
-        //     console.group('----------------------------------- Socket Info -----------------------------------');
-        //     console.info('Socket服务,目前已经实现的内容：');
-        //     console.info(`1、WebSocket服务端 监听，监听端口默认19467${options.port != 19467 ? `(当前端口:${options.port})` : ""}，可在配置文件中自定义port`);
-        //     console.info('2、配置文件可自定义配置项root（Socket服务器对应的业务代码存放目录）');
-        //     console.groupEnd();
-        //     console.info('----------------------------------- Socket Info -----------------------------------');
-        // }, 5000);
+        //sqlite3file
+        options.sqlite3file = options.db;
+        if (options.sqlite3file) {
+            _fs.mkdirSync(options.sqlite3file);
+            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+        } else {
+            options.sqlite3file = _global.sqlite3DbName;
+        }
+        const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        const sqlite3Obj = new sqlite3(options.sqlite3DbName, false);
+        for (const file of files) {
+            const sql = fs.readFileSync(file).toString();
+            sqlite3Obj.run(sql);
+        }
+
+        const socket = require('./lib/http/socket');
+        const server = await socket.createServer(options);
 
         setTimeout(() => {
             console.group('----------------------------------- Socket Info -----------------------------------');
@@ -351,8 +352,6 @@ _module.service.websocket = _module.service.ws = async (options) => {
             console.info('----------------------------------- Socket Info -----------------------------------');
         }, 5000);
 
-        const socket = require('./lib/http/socket');
-        const server = await socket.createServer(options);
         return server;
 
     } catch (e) {
