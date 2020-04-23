@@ -294,7 +294,7 @@ _module.service.api = (options) => {
             console.info('3、自定义业务代码目录');
             console.info('4、自定义Api接口');
             console.info('5、自定义Api接口中间件');
-            console.info('6、自定义静态资源目录');
+            console.info('6、自定义静态资源托管目录');
             console.info('7、自定义框架日志目录');
             console.info('自定义配置项如下：');
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用19469');
