@@ -12,7 +12,9 @@
         "socketServer:dev": "cd socket/ && node --inspect-brk=127.0.0.1:39231 server.js",
         "socketServer": "cd socket/ && node server.js",
         "socketClient:dev": "cd socket/ && node --inspect-brk=127.0.0.1:39232 client.js",
-        "socketClient": "cd socket/ && node client.js"
+        "socketClient": "cd socket/ && node client.js",
+        "cron:dev": "cd cron/ && node --inspect-brk=127.0.0.1:39233 app.js",
+        "cron": "cd cron/ && node app.js"
     },
     "dependencies": {}
 }

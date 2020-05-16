@@ -1,5 +1,6 @@
 create table if not exists api_log(
     id char(22) primary key not null,
+    host varchar(50) not null,
     qid char(22) NOT NULL,
     pid char(20) NOT NULL,
     ip char(30) NOT NULL,

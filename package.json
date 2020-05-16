@@ -31,6 +31,7 @@
     "socket.io-client": "^2.3.0",
     "sqlite3": "^4.1.1",
     "mmmagic": "^0.5.3",
-    "nodemailer": "^6.4.6"
+    "nodemailer": "^6.4.6",
+    "node-cron": "^2.0.3"
   }
 }
