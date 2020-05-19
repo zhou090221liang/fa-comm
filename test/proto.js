@@ -26,3 +26,10 @@ var text1 = text.aes();
 console.log("aes 加密:", text1);
 console.log("aes 解密:", text1.fromAes());
 
+text = "这是明文";
+text1 = text.encrypt();
+var text2 = text.encrypt();
+console.log("encrypt1:", text1);
+console.log("encrypt2:", text2);
+console.log("decrypt1:", text1.decrypt());
+console.log("decrypt2:", text2.decrypt());
