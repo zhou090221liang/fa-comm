@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cron任务调度</title>
+</head>
+
+<link rel="stylesheet" href="../style/mui.min.css">
+<link rel="stylesheet" href="../style/mui.showLoading.css">
+<script type="text/javascript" src="../jscript/mui.min.js"></script>
+<script type="text/javascript" src="../jscript/mui.showLoading.js"></script>
+<script type="text/javascript" src="../jscript/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../jscript/comm.js"></script>
+<script type="text/javascript" src="../jscript/ajax.js"></script>
+<script type="text/javascript">
+    $(function () {
+        load();
+    });
+
+    function load() {
+        mui.showLoading();
+        $ajax({
+            url: '/api/cron/run/info?id=' + window.Comm.Url.getParams('id'),
+            success: function (data) {
+                mui.hideLoading();
+                if (data.error_code != 0) {
+                    mui.alert(data.error_message, function () {
+                        window.history.go(-1);
+                    });
+                }
+                var html = '';
+                for (var i = 0; i < data.data.length; i++) {
+                    html += '\
+                        <div class="mui-row">\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].start_time + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].end_time + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].stdout || '') + '">' + (data.data[i].stdout ? '鼠标移入查看' : '') + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].stderr || '') + '">' + (data.data[i].stderr ? '鼠标移入查看' : '') + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].code + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].err_info || '') + '">' + (data.data[i].err_info ? '鼠标移入查看' : '') + '</div>\
+                        </div>\
+                        <div class="mui - row">\
+                            <div class="mui - col - xs - 12" style="border - top: 1px solid; ">&nbsp;</div>\
+                        </div>\
+                    ';
+                }
+                $('.content').html(html);
+            }, error: function () {
+                mui.hideLoading();
+                mui.alert('获取运行信息列表异常', function () {
+                    window.history.go(-1);
+                });
+            }
+        });
+    }
+</script>
+
+<body>
+    <div class="mui-row">
+        <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">开始时间</div>
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">结束时间</div>
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">日志输出</div>
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">异常输出</div>
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">退出代码</div>
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">异常信息</div>
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>
+    </div>
+    <div class="content" style="width: 100%;height: 100%;">
+
+    </div>
+</body>
+
+</html>

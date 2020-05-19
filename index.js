@@ -22,6 +22,7 @@ const _system = require('./lib/comm/system');
 const mail = require('./lib/mail');
 // db();
 // const conf = require('./resource/conf');
+const port = require('./lib/comm/port');
 
 let _global = {
     sqlite3DbName: 'fa-comm.db'
@@ -42,6 +43,7 @@ _module.verify = verify;
 _module.sdk = sdk;
 _module.sqlite3 = sqlite3;
 _module.mail = mail;
+_module.port = port;
 
 /**
  * 全局对象

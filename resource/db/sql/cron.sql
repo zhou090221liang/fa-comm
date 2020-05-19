@@ -9,7 +9,6 @@ create table if not exists cron_config(
     status int not null,
     name varchar(50) NOT NULL,
     schedule varchar(2000) NOT NULL,
-    exec_type char(30) NOT NULL,
     exec_path varchar(2000) NOT NULL,
     exec_file varchar(2000) NOT NULL,
     create_time datetime not null,

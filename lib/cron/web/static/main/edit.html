@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cron任务调度</title>
+</head>
+
+<link rel="stylesheet" href="../style/mui.min.css">
+<link rel="stylesheet" href="../style/mui.showLoading.css">
+<script type="text/javascript" src="../jscript/mui.min.js"></script>
+<script type="text/javascript" src="../jscript/mui.showLoading.js"></script>
+<script type="text/javascript" src="../jscript/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../jscript/comm.js"></script>
+<script type="text/javascript" src="../jscript/ajax.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var id = window.Comm.Url.getParams('id');
+        if (id) {
+            mui.showLoading();
+            $ajax({
+                url: '/api/cron/detail?id=' + id,
+                success: function (data) {
+                    mui.hideLoading();
+                    if (data.error_code != 0) {
+                        mui.alert(data.error_message, function () {
+                            window.history.go(-1);
+                        });
+                    } else {
+                        $('.name').val(data.data.name);
+                        $('.schedule').val(data.data.schedule);
+                        $('.exec_path').val(data.data.exec_path);
+                        $('.exec_file').val(data.data.exec_file);
+                    }
+                }, error: function () {
+                    mui.hideLoading();
+                    mui.alert('获取数据异常', function () {
+                        window.history.go(-1);
+                    });
+                }
+            });
+        }
+
+        $('.save').click(function () {
+            mui('.save').button('loading');
+            $ajax({
+                url: '/api/cron/save',
+                type: 'post',
+                data: JSON.stringify({
+                    id,
+                    name: $('.name').val(),
+                    schedule: $('.schedule').val(),
+                    exec_path: $('.exec_path').val(),
+                    exec_file: $('.exec_file').val()
+                }),
+                success: function (data) {
+                    mui('.save').button('reset');
+                    if (data.error_code == 0) {
+                        mui.alert('保存成功', function () {
+                            // window.history.go(-1);
+                            window.location.href = 'list.html';
+                        });
+                    } else {
+                        mui.alert('保存失败');
+                    }
+                }, error: function () {
+                    mui('.save').button('reset');
+                    mui.alert('保存失败');
+                }
+            });
+        });
+    });
+</script>
+
+<body>
+    <form class="mui-input-group">
+        <div class="mui-input-row">
+            <label>名称</label>
+            <input type="text" class="name mui-input-clear" placeholder="请输入Cron名称">
+        </div>
+        <div class="mui-input-row">
+            <label>计划</label>
+            <input type="text" class="schedule mui-input-clear" placeholder="请输入计划 second,minute,hour,day,month,week">
+        </div>
+        <div class="mui-input-row">
+            <label>运行目录</label>
+            <input type="text" class="exec_path mui-input-clear" placeholder="请输入运行目录">
+        </div>
+        <div class="mui-input-row">
+            <label>启动文件</label>
+            <input type="text" class="exec_file mui-input-clear" placeholder="请输入启动文件名称">
+        </div>
+        <div class="mui-button-row">
+            <button type="button" data-loading-text="保存中" class="save mui-btn mui-btn-primary">保存</button>
+        </div>
+    </form>
+</body>
+
+</html>

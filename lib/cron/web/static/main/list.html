@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Cron任务调度登录</title>
+    <title>Cron任务调度</title>
 </head>
 
 <link rel="stylesheet" href="../style/mui.min.css">
@@ -16,7 +16,7 @@
 <script type="text/javascript">
     $(function () {
         load();
-        setInterval(load, 5000); 
+        setInterval(load, 5000);
     });
 
     function load() {
@@ -49,15 +49,17 @@
                     }
                     //?action=start/stop/once&id=xxx
                     var oper = '';
+                    if (data.data[i].status == 0) {
+                        oper += '<a href="#" data-oper="edit" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">修改</a>&nbsp;';
+                        oper += '<a href="#" data-oper="start" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">启动</a>&nbsp;';
+                    }
                     if (data.data[i].status != -1 && data.data[i].status != 2) {
-                        oper += '<a href="#" data-oper="once" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">运行一次</a>&nbsp;&nbsp;';
+                        oper += '<a href="#" data-oper="once" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">运行一次</a>&nbsp;';
                     }
                     if (data.data[i].status == 1) {
-                        oper += '<a href="#" data-oper="stop" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">停止</a>';
+                        oper += '<a href="#" data-oper="stop" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">停止</a>&nbsp;';
                     }
-                    if (data.data[i].status == 0) {
-                        oper += '<a href="#" data-oper="start" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">启动</a>';
-                    }
+                    oper += '<a href="#" data-oper="run-info" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">运行日志</a>';
                     // html += '\
                     //     <div class="mui-row">\
                     //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].id + '</div>\
@@ -78,8 +80,8 @@
                     // ';
                     html += '\
                         <div class="mui-row">\
-                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].name + '</div>\
+                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;" title="second,minute,hour,day,month,week">'+ data.data[i].schedule + '</div>\
                             <div class="mui-col-xs-2" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_path + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_file + '</div>\
@@ -99,24 +101,33 @@
                     var oper = $(this).attr('data-oper');
                     var id = $(this).attr('data-id');
                     var name = $(this).attr('data-name');
-                    mui.confirm('确认' + $(this).html() + '"' + name + '"？"', '警告', ['确认', '取消'], function (event) {
-                        if (event.index == 0) {
-                            // mui.toast('确认');
-                            $ajax({
-                                url: '/api/cron/oper?action=' + oper + '&id=' + id,
-                                success: function (data) {
-                                    if (data.error_code == 0) {
-                                        load();
-                                        mui.alert($(this).html() + '成功');
-                                    } else {
-                                        mui.alert($(this).html() + '失败');
+                    if (oper == 'once' || oper == 'start' || oper == 'stop') {
+                        mui.confirm('确认' + $(this).html() + '"' + name + '"？"', '警告', ['确认', '取消'], function (event) {
+                            if (event.index == 0) {
+                                // mui.toast('确认');
+                                $ajax({
+                                    url: '/api/cron/oper?action=' + oper + '&id=' + id,
+                                    success: function (data) {
+                                        if (data.error_code == 0) {
+                                            load();
+                                            mui.alert($(this).html() + '成功');
+                                        } else {
+                                            mui.alert($(this).html() + '失败');
+                                        }
                                     }
-                                }
-                            });
-                        } else {
-                            mui.toast('取消操作');
+                                });
+                            } else {
+                                mui.toast('取消操作');
+                            }
+                        });
+                    } else {
+                        if (oper == 'edit') {
+                            window.location.href = "edit.html?id=" + id;
                         }
-                    });
+                        if (oper == 'run-info') {
+                            window.location.href = "info.html?id=" + id;
+                        }
+                    }
                 });
             }, error: function () {
                 mui.hideLoading();
@@ -128,12 +139,16 @@
 
 <body>
     <div class="mui-row">
+        <button type="button" onclick="javascript:window.location.href='edit.html'">新增</button>
+        <br>
+    </div>
+    <div class="mui-row">
         <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>
     </div>
     <div class="mui-row">
         <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">编号</div> -->
-        <div class="mui-col-xs-1" style="border-right: 1px solid;">状态</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">名称</div>
+        <div class="mui-col-xs-1" style="border-right: 1px solid;">状态</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;" title="second,minute,hour,day,month,week">计划</div>
         <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">类型</div> -->
         <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">运行目录</div> -->
