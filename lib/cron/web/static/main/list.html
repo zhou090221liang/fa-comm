@@ -58,19 +58,35 @@
                     if (data.data[i].status == 0) {
                         oper += '<a href="#" data-oper="start" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">启动</a>';
                     }
+                    // html += '\
+                    //     <div class="mui-row">\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].id + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].name + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;" title="second,minute,hour,day,month,week">'+ data.data[i].schedule + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_type + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_path + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_file + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].create_time + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].start_time + '</div>\
+                    //         <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].stop_time + '</div>\
+                    //         <div class="mui-col-xs-2">'+ oper + '</div>\
+                    //     </div>\
+                    //     <div class="mui-row">\
+                    //         <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>\
+                    //     </div>\
+                    // ';
                     html += '\
                         <div class="mui-row">\
-                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].id + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].name + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;" title="second,minute,hour,day,month,week">'+ data.data[i].schedule + '</div>\
-                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_type + '</div>\
-                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_path + '</div>\
+                            <div class="mui-col-xs-2" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_path + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_file + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].create_time + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].start_time + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].stop_time + '</div>\
-                            <div class="mui-col-xs-2">'+ oper + '</div>\
+                            <div class="mui-col-xs-3">'+ oper + '</div>\
                         </div>\
                         <div class="mui-row">\
                             <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>\
@@ -115,17 +131,19 @@
         <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>
     </div>
     <div class="mui-row">
-        <div class="mui-col-xs-1" style="border-right: 1px solid;">编号</div>
+        <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">编号</div> -->
         <div class="mui-col-xs-1" style="border-right: 1px solid;">状态</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">名称</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;" title="second,minute,hour,day,month,week">计划</div>
-        <div class="mui-col-xs-1" style="border-right: 1px solid;">类型</div>
-        <div class="mui-col-xs-1" style="border-right: 1px solid;">运行目录</div>
+        <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">类型</div> -->
+        <!-- <div class="mui-col-xs-1" style="border-right: 1px solid;">运行目录</div> -->
+        <div class="mui-col-xs-2" style="border-right: 1px solid;">运行目录</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">启动文件</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">创建时间</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">启动时间</div>
         <div class="mui-col-xs-1" style="border-right: 1px solid;">停止时间</div>
-        <div class="mui-col-xs-2">操作</div>
+        <!-- <div class="mui-col-xs-2">操作</div> -->
+        <div class="mui-col-xs-3">操作</div>
     </div>
     <div class="mui-row">
         <div class="mui-col-xs-12" style="border-top: 1px solid;">&nbsp;</div>
