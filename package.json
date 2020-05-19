@@ -16,21 +16,22 @@
     "resource"
   ],
   "dependencies": {
-    "request": "^2.88.0",
-    "node-uuid": "^1.4.8",
-    "single-line-log": "^1.1.2",
-    "ioredis": "^4.9.5",
-    "mysql": "^2.17.1",
     "amqplib": "^0.3.2",
-    "node-archiver": "^0.3.0",
     "archiver": "^3.1.1",
+    "cheerio": "^1.0.0-rc.3",
     "formidable": "^1.2.1",
     "iconv-lite": "^0.5.0",
-    "cheerio": "^1.0.0-rc.3",
+    "ioredis": "^4.9.5",
+    "mmmagic": "^0.5.3",
+    "mysql": "^2.17.1",
+    "node-archiver": "^0.3.0",
+    "node-cron": "^2.0.3",
+    "node-uuid": "^1.4.8",
+    "nodemailer": "^6.4.6",
+    "request": "^2.88.0",
+    "single-line-log": "^1.1.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "sqlite3": "^4.1.1",
-    "mmmagic": "^0.5.3",
-    "nodemailer": "^6.4.6"
+    "sqlite3": "^4.2.0"
   }
 }

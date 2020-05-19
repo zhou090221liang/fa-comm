@@ -1,0 +1,1 @@
+update cron_config set status = 0,init_time = null,start_time = null,stop_time = null;

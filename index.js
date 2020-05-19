@@ -22,6 +22,7 @@ const _system = require('./lib/comm/system');
 const mail = require('./lib/mail');
 // db();
 // const conf = require('./resource/conf');
+const port = require('./lib/comm/port');
 
 let _global = {
     sqlite3DbName: 'fa-comm.db'
@@ -42,6 +43,7 @@ _module.verify = verify;
 _module.sdk = sdk;
 _module.sqlite3 = sqlite3;
 _module.mail = mail;
+_module.port = port;
 
 /**
  * 全局对象
@@ -214,14 +216,17 @@ _module.service.resource = (options) => {
         _fs.mkdirSync(options.sqlite3file);
         options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
     } else {
-        options.sqlite3file = _global.sqlite3DbName;
+        options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
     }
-    const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+    // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+    // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+    // for (const file of files) {
+    //     const sql = fs.readFileSync(file).toString();
+    //     sqlite3Obj.run(sql);
+    // }
     const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-    for (const file of files) {
-        const sql = fs.readFileSync(file).toString();
-        sqlite3Obj.run(sql);
-    }
+    sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/resource.sql')).toString();
+    sqlite3Obj.exec(sql);
 
     _process.start(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
 
@@ -276,14 +281,18 @@ _module.service.api = (options) => {
             _fs.mkdirSync(options.sqlite3file);
             options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
         } else {
-            options.sqlite3file = _global.sqlite3DbName;
+            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
         }
-        const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+        // for (const file of files) {
+        //     const sql = fs.readFileSync(file).toString();
+        //     sqlite3Obj.run(sql);
+        // }
+
         const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        for (const file of files) {
-            const sql = fs.readFileSync(file).toString();
-            sqlite3Obj.run(sql);
-        }
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
+        sqlite3Obj.exec(sql);
 
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
@@ -327,14 +336,17 @@ _module.service.websocket = _module.service.ws = async (options) => {
             _fs.mkdirSync(options.sqlite3file);
             options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
         } else {
-            options.sqlite3file = _global.sqlite3DbName;
+            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
         }
-        const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
+        // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+        // for (const file of files) {
+        //     const sql = fs.readFileSync(file).toString();
+        //     sqlite3Obj.run(sql);
+        // }
         const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        for (const file of files) {
-            const sql = fs.readFileSync(file).toString();
-            sqlite3Obj.run(sql);
-        }
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/ws.sql')).toString();
+        await sqlite3Obj.exec(sql);
 
         const socket = require('./lib/http/socket');
         const server = await socket.createServer(options);
@@ -354,6 +366,61 @@ _module.service.websocket = _module.service.ws = async (options) => {
 
         return server;
 
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+/**
+ * 启动cron定时任务服务(提供接口服务)
+ * @param {JSON} options 配置文件
+ * @returns
+ */
+_module.service.cron = async (options) => {
+    try {
+        options = options || {};
+        //cron定时任务服务器监听的端口
+        options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19466;
+        options.root = path.join(__dirname, './lib/cron/web/');
+        options.static = path.join(__dirname, './lib/cron/web/static/');
+        options.sqlite3file = options.db;
+        if (options.sqlite3file) {
+            _fs.mkdirSync(options.sqlite3file);
+            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+        } else {
+            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
+        }
+        let sql;
+        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_user.sql')).toString();
+        // await sqlite3Obj.run(sql);
+        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_config.sql')).toString();
+        // await sqlite3Obj.run(sql);
+        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_instance.sql')).toString();
+        // await sqlite3Obj.run(sql);
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron.sql')).toString();
+        await sqlite3Obj.exec(sql);
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_stop.sql')).toString();
+        await sqlite3Obj.run(sql);
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_add_user.sql')).toString();
+        try {
+            await sqlite3Obj.run(sql);
+        } catch (e) { }
+        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
+        await sqlite3Obj.run(sql);
+        _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], 1, true, false);
+        setTimeout(() => {
+            console.group('----------------------------------- Cron Info -----------------------------------');
+            console.info(`Cron定时任务服务（监听端口:${options.port}）,目前已经实现的内容`);
+            console.info('1、创建任务');
+            console.info('2、启动/停止任务');
+            console.info('自定义配置项如下：');
+            console.info('      1) port，该配置项为任务管理页面HTTP监听的端口，如不配置，或配置错误，默认使用19466');
+            console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
+            console.info(`首次使用，请及时登录http://${ip.local}:${options.port}，修改密码（默认用户名密码均为admin），并创建任务`);
+            console.groupEnd();
+            console.info('----------------------------------- Cron Info -----------------------------------');
+        }, 5000);
     } catch (e) {
         console.error(e);
     }
