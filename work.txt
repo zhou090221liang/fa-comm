@@ -46,6 +46,8 @@ v0.14.0
 v0.14.1
     ip对象添加ping（需要服务器支持ping）
     port对象添加telnet（使用net链接实现）
+v0.14.2
+    添加workfollow
 
 待实现的功能：
 1、实现微信公众号功能
