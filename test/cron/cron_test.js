@@ -1,7 +1,7 @@
 const comm = require('../../index');
 
 (async () => {
-    //获取任务id
+    //获取任务
     let task = process.argv[process.argv.length - 1];
     //业务逻辑
     let i = 0;
