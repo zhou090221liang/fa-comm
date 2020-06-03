@@ -64,14 +64,17 @@
                     //?action=start/stop/once&id=xxx
                     var oper = '';
                     if (data.data[i].status == 0) {
+                        //停止状态
                         oper += '<a href="#" data-oper="edit" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">修改</a>&nbsp;';
                         oper += '<a href="#" data-oper="del" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">删除</a>&nbsp;';
                         oper += '<a href="#" data-oper="start" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">启动</a>&nbsp;';
-                    }
-                    if (data.data[i].status != -1 && data.data[i].status != 2) {
                         oper += '<a href="#" data-oper="once" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">运行一次</a>&nbsp;';
                     }
+                    if (data.data[i].status != -1 && data.data[i].status != 2) {
+                        //启动状态（未在运行）
+                    }
                     if (data.data[i].status == 1) {
+                        //启动状态（可能在运行也可能不在运行）
                         oper += '<a href="#" data-oper="stop" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">停止</a>&nbsp;';
                     }
                     oper += '<a href="#" data-oper="run-info" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">运行日志</a>';
