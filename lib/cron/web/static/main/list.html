@@ -14,9 +14,23 @@
 <script type="text/javascript" src="../jscript/comm.js"></script>
 <script type="text/javascript" src="../jscript/ajax.js"></script>
 <script type="text/javascript">
+    var si;
     $(function () {
         load();
-        setInterval(load, 5000);
+        $('#auto_ref_time').on('change', function () {
+            var t = parseInt($('#auto_ref_time').val());
+            if (t) {
+                if (si) {
+                    clearInterval(si);
+                }
+                si = setInterval(load, t * 1000);
+            } else {
+                if (si) {
+                    clearInterval(si);
+                    si = null;
+                }
+            }
+        });
     });
 
     function load() {
@@ -51,6 +65,7 @@
                     var oper = '';
                     if (data.data[i].status == 0) {
                         oper += '<a href="#" data-oper="edit" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">修改</a>&nbsp;';
+                        oper += '<a href="#" data-oper="del" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">删除</a>&nbsp;';
                         oper += '<a href="#" data-oper="start" data-name="' + data.data[i].name + '" data-id="' + data.data[i].id + '">启动</a>&nbsp;';
                     }
                     if (data.data[i].status != -1 && data.data[i].status != 2) {
@@ -101,18 +116,20 @@
                     var oper = $(this).attr('data-oper');
                     var id = $(this).attr('data-id');
                     var name = $(this).attr('data-name');
-                    if (oper == 'once' || oper == 'start' || oper == 'stop') {
-                        mui.confirm('确认' + $(this).html() + '"' + name + '"？"', '警告', ['确认', '取消'], function (event) {
+                    var msg = $(this).html();
+                    if (oper == 'once' || oper == 'start' || oper == 'stop' || oper == 'del') {
+                        mui.confirm('确认' + msg + '"' + name + '"？"', '警告', ['确认', '取消'], function (event) {
                             if (event.index == 0) {
                                 // mui.toast('确认');
                                 $ajax({
                                     url: '/api/cron/oper?action=' + oper + '&id=' + id,
                                     success: function (data) {
                                         if (data.error_code == 0) {
-                                            load();
-                                            mui.alert($(this).html() + '成功');
+                                            mui.alert(msg + '成功', function () {
+                                                load();
+                                            });
                                         } else {
-                                            mui.alert($(this).html() + '失败');
+                                            mui.alert(msg + '失败');
                                         }
                                     }
                                 });
@@ -135,11 +152,29 @@
             }
         });
     }
+
+    // function autoref(){
+    //     var t = document.getElementById('auto_ref_time').value;
+    //     console.log(t);
+    // }
 </script>
 
 <body>
     <div class="mui-row">
         <button type="button" onclick="javascript:window.location.href='edit.html'">新增</button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span>每隔</span>
+        <select id="auto_ref_time" style="width: 100px;">
+            <option value="0">从不</option>
+            <option value="1">1秒</option>
+            <option value="5">5秒</option>
+            <option value="15">15秒</option>
+            <option value="30">30秒</option>
+            <option value="60">60秒</option>
+            <option value="300">5分钟</option>
+            <option value="600">10分钟</option>
+        </select>
+        自动刷新
         <br>
     </div>
     <div class="mui-row">

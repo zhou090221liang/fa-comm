@@ -48,6 +48,9 @@ v0.14.1
     port对象添加telnet（使用net链接实现）
 v0.14.2
     添加workfollow
+v0.14.3
+    修复cron部分已知Bug
+    cron列表增加删除功能
 
 待实现的功能：
 1、实现微信公众号功能
