@@ -62,6 +62,15 @@
                             break;
                     }
                     //?action=start/stop/once&id=xxx
+                    var process = "";
+                    if (data.data[i].status == 2) {
+                        try {
+                            var p = JSON.parse(decodeURIComponent(data.data[i].process));
+                            if (p.now != p.total) {
+                                process = parseFloat(p.now / p.total * 100.00).toFixed(2) + '%';
+                            }
+                        } catch (e) { }
+                    }
                     var oper = '';
                     if (data.data[i].status == 0) {
                         //停止状态
@@ -99,7 +108,7 @@
                     html += '\
                         <div class="mui-row">\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].name + '</div>\
-                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + '</div>\
+                            <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ status + (process ? "(" + process + ")" : "") + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;" title="second,minute,hour,day,month,week">'+ data.data[i].schedule + '</div>\
                             <div class="mui-col-xs-2" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_path + '</div>\
                             <div class="mui-col-xs-1" style="word-break:break-all;border-right: 1px solid;">'+ data.data[i].exec_file + '</div>\

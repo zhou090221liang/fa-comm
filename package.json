@@ -1,6 +1,6 @@
 {
   "name": "fa-comm",
-  "version": "0.14.4",
+  "version": "0.14.5",
   "description": "通用方法全聚合",
   "author": "zxy<zxy@zhouxiaoyue.cn>",
   "main": "./index.js",

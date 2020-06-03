@@ -25,9 +25,10 @@ const mail = require('./lib/mail');
 const port = require('./lib/comm/port');
 const workfollow = require('./lib/comm/workfollow');
 
-let _global = {
+//全局变量
+global._global = {
     sqlite3DbName: 'fa-comm.db'
-};
+};;
 let _module = {};
 
 _module.convert = convert;
@@ -51,9 +52,15 @@ _module.workfollow = workfollow;
  * 全局对象
  * @returns
  */
-_module.global = () => {
-    return _global;
+const getGlobal = (name) => {
+    return name ? global._global[name] : global._global;
 };
+const setGlobal = (name, value) => {
+    global._global[name] = value;
+};
+_module.global = global._global;
+_module.setGlobal = setGlobal;
+_module.getGlobal = getGlobal;
 
 function getCallerFileNameAndLine() {
     function getException() {
@@ -200,7 +207,7 @@ _module.service = {};
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.resource = (options) => {
+_module.service.resource = function (options) {
     options = options && verify.isJson(options) ? options : {};
     //资源服务器监听的端口
     options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : 19468;
@@ -216,10 +223,11 @@ _module.service.resource = (options) => {
     options.sqlite3file = options.db;
     if (options.sqlite3file) {
         _fs.mkdirSync(options.sqlite3file);
-        options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+        options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
     } else {
-        options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
+        options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
     }
+    // global._global.resource_sqlite3file = options.sqlite3file;
     // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
     // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
     // for (const file of files) {
@@ -255,7 +263,7 @@ _module.service.resource = (options) => {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.api = (options) => {
+_module.service.api = function (options) {
     try {
         options = options || {};
         //Api服务器监听的端口
@@ -281,10 +289,11 @@ _module.service.api = (options) => {
         options.sqlite3file = options.db;
         if (options.sqlite3file) {
             _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
         } else {
-            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
+            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
         }
+        // global._global.api_sqlite3file = options.sqlite3file;
         // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
         // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
         // for (const file of files) {
@@ -326,7 +335,7 @@ _module.service.api = (options) => {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.websocket = _module.service.ws = async (options) => {
+_module.service.websocket = _module.service.ws = async function (options) {
     try {
         options = options || {};
         //端口
@@ -336,10 +345,11 @@ _module.service.websocket = _module.service.ws = async (options) => {
         options.sqlite3file = options.db;
         if (options.sqlite3file) {
             _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
         } else {
-            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
+            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
         }
+        // global._global.ws_sqlite3file = options.sqlite3file;
         // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
         // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
         // for (const file of files) {
@@ -378,7 +388,7 @@ _module.service.websocket = _module.service.ws = async (options) => {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.cron = async (options) => {
+_module.service.cron = async function (options) {
     try {
         options = options || {};
         //cron定时任务服务器监听的端口
@@ -388,10 +398,11 @@ _module.service.cron = async (options) => {
         options.sqlite3file = options.db;
         if (options.sqlite3file) {
             _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, _global.sqlite3DbName);
+            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
         } else {
-            options.sqlite3file = path.join(process.cwd(), _global.sqlite3DbName);
+            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
         }
+        // global._global.cron_sqlite3file = options.sqlite3file;
         let sql;
         const sqlite3Obj = new sqlite3(options.sqlite3file, false);
         // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_user.sql')).toString();
@@ -410,6 +421,24 @@ _module.service.cron = async (options) => {
         } catch (e) { }
         sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
         await sqlite3Obj.run(sql);
+        //默认的一个测试任务
+        const testCronTaskPath = path.join(__dirname, './test/cron/');
+        if (fs.existsSync(path.join(testCronTaskPath, './cron_test.js'))) {
+            const existsTestCronTask = await sqlite3Obj.get("select * from cron_config where id= ?", ['0']);
+            if (existsTestCronTask) {
+                console.warn('已经存在测试任务');
+            } else {
+                await sqlite3Obj.run("insert into cron_config(id,status,name,schedule,exec_path,exec_file,create_time) values (?,?,?,?,?,?,?);", [
+                    '0',
+                    '0',
+                    'Test',
+                    '0 0 0 * * *',
+                    testCronTaskPath,
+                    'cron_test.js',
+                    new Date().Format()
+                ]);
+            }
+        }
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], 1, true, false);
         setTimeout(() => {
             console.group('----------------------------------- Cron Info -----------------------------------');
@@ -456,6 +485,25 @@ _module.service.analyzing = (_path) => {
         });
     });
     return result;
+}
+
+/**
+ * 修改当前任务进度
+ * @param {String} task 脚本中接收的任务对象
+ * @param {number} total 总数
+ * @param {number} [now=1] 当前数
+ */
+_module.service.setCron = async function (task, total, now = 1) {
+    task = JSON.parse(task.decrypt());
+    const p = {
+        total,
+        now
+    };
+    const sqlite3Obj = new sqlite3(task.conf.sqlite3file, false);
+    await sqlite3Obj.run("update cron_config set process = ? where id = ?", [
+        encodeURIComponent(JSON.stringify(p)),
+        task.id
+    ]);
 }
 
 module.exports = _module;

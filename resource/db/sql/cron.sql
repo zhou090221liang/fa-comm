@@ -14,7 +14,8 @@ create table if not exists cron_config(
     create_time datetime not null,
     init_time datetime,
     start_time datetime,
-    stop_time datetime
+    stop_time datetime,
+    process varchar(2000)
 );
 
 create table if not exists cron_instance(
