@@ -1,6 +1,6 @@
 {
   "name": "fa-comm",
-  "version": "0.14.6",
+  "version": "0.14.7",
   "description": "通用方法全聚合",
   "author": "zxy<zxy@zhouxiaoyue.cn>",
   "main": "./index.js",
@@ -32,6 +32,9 @@
     "single-line-log": "^1.1.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "superagent": "^5.2.2",
+    "superagent-charset": "^1.2.0",
+    "urlencode": "^1.1.0"
   }
 }
