@@ -10,5 +10,7 @@ create table if not exists upload(
     md5 char(32),
     batch char(22),
     upload_time datetime,
-    extend text
+    extend text,
+    use_time bigint,
+    speed varchar(200)
 );

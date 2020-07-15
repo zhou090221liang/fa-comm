@@ -250,7 +250,7 @@ _module.service.resource = function (options) {
         console.info('5、自定义框架日志目录');
         console.info('自定义配置项如下：');
         console.info('      1) port，该配置项为Resource监听的端口，如不配置，或配置错误，默认使用19468');
-        console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位MB，如不配置，默认10MB。');
+        console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位字节，如不配置，默认10MB。');
         console.info('      3) path，该配置项为一个目录，该目录用于存放上传的资源文件，如不配置，默认为当前启动文件所在目录下的fa-comm.uploads目录下。');
         console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
         console.groupEnd();

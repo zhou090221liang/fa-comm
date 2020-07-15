@@ -65,6 +65,9 @@ v0.14.7
     添加superagent，方便获取GBK编码的网页相应
 v0.14.8
     Convert对象添加sizeFormat方法
+v0.14.9
+    Resource服务启动默认大小提示单位修复成字节
+    Resource服务增加上传耗费时间及上传速度记录
 
 待实现的功能：
 1、实现微信公众号功能
