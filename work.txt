@@ -72,6 +72,8 @@ v0.14.10
     修复toString方法转换Array时的Bug
 v0.14.11
     修复req问题
+v.15.0
+    String原型函数添加fromHtmlEntity
 
 待实现的功能：
 1、实现微信公众号功能
