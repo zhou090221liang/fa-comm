@@ -76,6 +76,8 @@ v.15.0
     String原型函数添加fromHtmlEntity
 v.15.1
     String原型函数fromHtmlEntity的Bug修复
+v.15.2
+    String原型函数fromHtmlEntity的Bug修复
 
 待实现的功能：
 1、实现微信公众号功能
