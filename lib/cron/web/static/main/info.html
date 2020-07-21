@@ -32,13 +32,13 @@
                 var html = '';
                 for (var i = 0; i < data.data.length; i++) {
                     html += '\
-                        <div class="mui-row">\
+                        <div class="mui-row" data-id="'+ data.data[i].id + '" data-info="' + encodeURIComponent(JSON.stringify(data.data[i])) + '">\
                             <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].start_time + '</div>\
                             <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].end_time + '</div>\
-                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].stdout || '') + '">' + (data.data[i].stdout ? '鼠标移入查看' : '') + '</div>\
-                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].stderr || '') + '">' + (data.data[i].stderr ? '鼠标移入查看' : '') + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" onclick="show(\''+ data.data[i].id + '\',\'stdout\')">点击查看</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" onclick="show(\''+ data.data[i].id + '\',\'stderr\')">点击查看</div>\
                             <div class="mui-col-xs-2" style="border-right: 1px solid;">'+ data.data[i].code + '</div>\
-                            <div class="mui-col-xs-2" style="border-right: 1px solid;" title="'+ (data.data[i].err_info || '') + '">' + (data.data[i].err_info ? '鼠标移入查看' : '') + '</div>\
+                            <div class="mui-col-xs-2" style="border-right: 1px solid;" onclick="show(\''+ data.data[i].id + '\',\'err_info\')">点击查看</div>\
                         </div>\
                         <div class="mui - row">\
                             <div class="mui - col - xs - 12" style="border - top: 1px solid; ">&nbsp;</div>\
@@ -53,6 +53,12 @@
                 });
             }
         });
+    }
+
+    function show(id, type) {
+        var msg = JSON.parse(decodeURIComponent($("[data-id='" + id + "']").attr('data-info')))[type || "stdout"];
+        // mui.alert(msg);
+        $("#showMsg").val(msg);
     }
 </script>
 
@@ -73,6 +79,11 @@
     </div>
     <div class="content" style="width: 100%;height: 100%;">
 
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-xs-12">
+            <textarea rows="20" readonly="readonly" style="width:100%;" id="showMsg"></textarea>
+        </div>
     </div>
 </body>
 
