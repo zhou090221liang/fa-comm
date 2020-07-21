@@ -24,6 +24,7 @@ const mail = require('./lib/mail');
 // const conf = require('./resource/conf');
 const port = require('./lib/comm/port');
 const workfollow = require('./lib/comm/workfollow');
+const BaiDuApi = require('./lib/baidu/index');
 
 //全局变量
 global._global = {
@@ -505,5 +506,10 @@ _module.service.setCron = async function (task, total, now = 1) {
         task.id
     ]);
 }
+
+//三方Api接口
+_module.Api = {
+    Baidu: BaiDuApi
+};
 
 module.exports = _module;
