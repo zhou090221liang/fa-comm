@@ -5,3 +5,4 @@ node_modules
 test/*.db
 fa-comm.db
 *.accesstoken
+.vscode/
