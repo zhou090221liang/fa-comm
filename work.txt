@@ -82,6 +82,9 @@ v.15.3
     cron服务运行日志页面修改，直观查看脚本输出
     convert添加pictureToBase64方法
     添加百度身份证识别接口
+v1.15.4
+    req增加getHtmlPostFormByJquery方法
+    req错别字因为修改
 
 待实现的功能：
 1、实现微信公众号功能
