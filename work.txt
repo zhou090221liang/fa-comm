@@ -72,20 +72,20 @@ v0.14.10
     修复toString方法转换Array时的Bug
 v0.14.11
     修复req问题
-v.15.0
+v0.15.0
     String原型函数添加fromHtmlEntity
-v.15.1
+v0.15.1
     String原型函数fromHtmlEntity的Bug修复
-v.15.2
+v0.15.2
     String原型函数fromHtmlEntity的Bug修复
-v.15.3
+v0.15.3
     cron服务运行日志页面修改，直观查看脚本输出
     convert添加pictureToBase64方法
     添加百度身份证识别接口
-v1.15.4
+v0.15.4
     req增加getHtmlPostFormByJquery方法
     req错别字因为修改
-v1.15.5
+v0.15.5
     修复静态资源出现乱码的问题
     默认允许所有请求头和请求方式
 
