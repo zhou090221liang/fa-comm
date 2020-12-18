@@ -35,6 +35,7 @@
     "sqlite3": "^4.2.0",
     "superagent": "^5.2.2",
     "superagent-charset": "^1.2.0",
-    "urlencode": "^1.1.0"
+    "urlencode": "^1.1.0",
+    "xml2json": "^0.12.0"
   }
 }

@@ -1,4 +1,3 @@
-
 require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
@@ -250,7 +249,7 @@ _module.service.resource = function (options) {
     _process.start(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
 
     setTimeout(() => {
-        console.group('----------------------------------- Resource Info -----------------------------------');
+        console.group('#################################### Resource Info ####################################');
         console.info(`Resource服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
         console.info('1、Resource(HTTP/1.1) 监听');
         console.info('2、自定义监听端口');
@@ -262,8 +261,9 @@ _module.service.resource = function (options) {
         console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位字节，如不配置，默认10MB。');
         console.info('      3) path，该配置项为一个目录，该目录用于存放上传的资源文件，如不配置，默认为当前启动文件所在目录下的fa-comm.uploads目录下。');
         console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
+        console.info(`------------------ 详细接口说明，请访问：http://${ip.local}:${options.port} ------------------`);
         console.groupEnd();
-        console.info('----------------------------------- Resource Info -----------------------------------');
+        console.info('#################################### Resource Info ####################################');
     }, 5000);
 };
 
@@ -316,7 +316,7 @@ _module.service.api = function (options) {
 
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
-            console.group('----------------------------------- Api Info -----------------------------------');
+            console.group('#################################### Api Info ####################################');
             console.info(`Api服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
             console.info('1、HTTP/1.1 监听');
             console.info('2、自定义监听端口');
@@ -332,7 +332,7 @@ _module.service.api = function (options) {
             console.info('      4) static，该配置项为一个目录，用于存放静态资源文件，如不配置，默认不使用静态资源');
             console.info('      5) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.groupEnd();
-            console.info('----------------------------------- Api Info -----------------------------------');
+            console.info('#################################### Api Info ####################################');
         }, 5000);
     } catch (e) {
         console.error(e);
@@ -373,7 +373,7 @@ _module.service.websocket = _module.service.ws = async function (options) {
         const server = await socket.createServer(options);
 
         setTimeout(() => {
-            console.group('----------------------------------- Socket Info -----------------------------------');
+            console.group('#################################### Socket Info ####################################');
             console.info(`Socket服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
             console.info('1、WebSocket服务端 监听');
             console.info('2、自定义监听端口');
@@ -382,7 +382,7 @@ _module.service.websocket = _module.service.ws = async function (options) {
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Socket);
             console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.groupEnd();
-            console.info('----------------------------------- Socket Info -----------------------------------');
+            console.info('#################################### Socket Info ####################################');
         }, 5000);
 
         return server;
@@ -450,7 +450,7 @@ _module.service.cron = async function (options) {
         }
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], 1, true, false);
         setTimeout(() => {
-            console.group('----------------------------------- Cron Info -----------------------------------');
+            console.group('#################################### Cron Info ####################################');
             console.info(`Cron定时任务服务（监听端口:${options.port}）,目前已经实现的内容`);
             console.info('1、创建任务');
             console.info('2、启动/停止任务');
@@ -459,7 +459,7 @@ _module.service.cron = async function (options) {
             console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.info(`首次使用，请及时登录http://${ip.local}:${options.port}，修改密码（默认用户名密码均为admin），并创建任务`);
             console.groupEnd();
-            console.info('----------------------------------- Cron Info -----------------------------------');
+            console.info('#################################### Cron Info ####################################');
         }, 5000);
     } catch (e) {
         console.error(e);
@@ -492,18 +492,26 @@ _module.service.wechat = function (options) {
 
         _process.start(path.join(__dirname, './lib/http/wechat.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
-            console.group('----------------------------------- Wechat Info -----------------------------------');
+            console.group('#################################### Wechat Info ####################################');
             console.info(`微信测号服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
             console.info('1、HTTP/1.1 监听，可以获取AccessToken等操作');
             console.info('2、自定义监听端口');
             console.info('3、自定义框架日志目录');
             console.info('自定义配置项如下：');
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Wechat);
-            console.info(`      2) forward，该配置项为一个接口地址，用于接收微信推送等，微信公众号有交互时，本框架或将微信包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.ipAddr}:${options.port}/wechat/push/{account_id}，其中"http://${ip.ipAddr}:${options.port}"需映射成80端口的外网地址。`);
+            console.info(`      2) forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
             console.info('      3) accounts，该配置项为一个Array<JSON>，用于配置一个或多个微信账号，具体配置方式，请查看demo。');
             console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
+            console.info('注意事项：');
+            console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);
+            console.info(`      1) 微信网页授权域名，必须配置成本框架的外网80域名地址，网页授权也从本框架获取`);
+            // console.info('内置接口地址：');
+            // console.info(`      1) 获取AccessToken`);
+            // console.info(`         请求地址：http://${ip.local}:${options.port}/wechat/accesstoken/:account_id`);
+            // console.info(`         请求方式：GET`);
+            console.info(`---------------- 详细接口说明，请访问：http://${ip.local}:${options.port} ----------------`);
             console.groupEnd();
-            console.info('----------------------------------- Wechat Info -----------------------------------');
+            console.info('#################################### Wechat Info ####################################');
         }, 5000);
     } catch (e) {
         console.error(e);

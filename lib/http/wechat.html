@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>微信服务号服务器Api文档</title>
+</head>
+
+<style>
+    group div {
+        font-weight: bold;
+    }
+
+    table {
+        width: 100%;
+        border-top: solid 1px;
+    }
+
+    table tr:hover{ 
+        background: #72d8b657;
+    }
+
+    .title {
+        width: 20%;
+        border-left: solid 1px;
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+    }
+
+    .notes{
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+    }
+
+    .red{
+        color: red;
+    }
+</style>
+
+<body>
+    <group>
+        <fieldset>
+            <div>获取AccessToken接口</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Body</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"basic"<br>command:请固定传"accesstoken"</td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">对应公众号的AccessToken</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">用于第三方需要使用自己的微信接口调用凭证，保证了AccessToken只在本框架维护，防止多地维护起冲突。</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>获取网页Oauth2.0授权地址</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Body</td>
+                    <td class="notes">JSON格式，如：<br>{<br>&nbsp;&nbsp;"url":"要跳转的地址，跳转之后，会在地址栏带上用户信息",<br>&nbsp;&nbsp;"type":"授权方式，snsapi_base或snsapi_userinfo，详见微信文档：https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html"<br>}</td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"oauth"<br>command:请固定传"url"</td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">一个微信Oauth2.0的URL</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">访问该Oauth2.0地址会触发微信Oauth2.0授权，同意授权（如有需要）后，将自动跳转到用户的页面。</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+    <group>
+        <fieldset>
+            <div>长地址转短地址</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Body</td>
+                    <td class="notes">JSON格式，如：<br>{<br>&nbsp;&nbsp;"url":"要转换的地址"<br>}</td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts），也可以不加，系统默认自动选择一个托管的账号<br>module:请固定传"account"<br>command:请固定传"shorturl"</td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">一个转换后的短地址</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes"></td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
+</body>
+
+</html>
