@@ -504,7 +504,7 @@ _module.service.wechat = function (options) {
             console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录。');
             console.info('注意事项：');
             console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);
-            console.info(`      1) 微信网页授权域名，必须配置成本框架的外网80域名地址，网页授权也从本框架获取`);
+            console.info(`      1) 微信网页授权域名，必须配置成本框架的外网域名地址可以带端口号，非必须80，网页授权也从本框架获取`);
             // console.info('内置接口地址：');
             // console.info(`      1) 获取AccessToken`);
             // console.info(`         请求地址：http://${ip.local}:${options.port}/wechat/accesstoken/:account_id`);
