@@ -501,7 +501,7 @@ _module.service.wechat = function (options) {
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Wechat);
             console.info(`      2) forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
             console.info('      3) accounts，该配置项为一个Array<JSON>，用于配置一个或多个微信账号，具体配置方式，请查看demo。');
-            console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
+            console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录。');
             console.info('注意事项：');
             console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);
             console.info(`      1) 微信网页授权域名，必须配置成本框架的外网80域名地址，网页授权也从本框架获取`);

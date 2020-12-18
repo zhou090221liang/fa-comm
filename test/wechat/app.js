@@ -7,7 +7,7 @@ comm.service.wechat({
     //账号配置，可以多个，哪怕一个也需要配置成Array<JSON>
     accounts: [{
         //微信号
-        account_id: 'gh_9fdb812fc000',
+        account_id: 'gh_9fdb812fxxx',
         //appid
         appid: '',
         //appsecret
@@ -17,6 +17,6 @@ comm.service.wechat({
         //JS接口安全域名
         js_domain: 'examples.domain.com',
         //授权回调页面域名
-        oauth_url: 'examples.domain.com',
+        oauth_url: 'examples.domain.com:8080'
     }]
 });
