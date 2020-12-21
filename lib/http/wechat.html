@@ -14,7 +14,7 @@
         border-top: solid 1px;
     }
 
-    table tr:hover{ 
+    table tr:hover {
         background: #72d8b657;
     }
 
@@ -25,17 +25,53 @@
         border-bottom: solid 1px;
     }
 
-    .notes{
+    .notes {
         border-right: solid 1px;
         border-bottom: solid 1px;
     }
 
-    .red{
+    .red {
         color: red;
     }
 </style>
 
 <body>
+    <group>
+        <fieldset>
+            <div>校验数据有效性</div>
+            <table>
+                <tr>
+                    <td class="title">Url</td>
+                    <td class="notes">/verification</td>
+                </tr>
+                <tr>
+                    <td class="title">Method</td>
+                    <td class="notes">POST</td>
+                </tr>
+                <tr>
+                    <td class="title">Params</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Body</td>
+                    <td class="notes">待校验数据</td>
+                </tr>
+                <tr>
+                    <td class="title">Header</td>
+                    <td class="notes"></td>
+                </tr>
+                <tr>
+                    <td class="title">Returns</td>
+                    <td class="notes">如果校验成功，则返回实际结果，否则返回异常信息。如果校验失败或异常，一般是由于待校验数据不完整，或非本框架的推送，有些类似于微信的“接入指南-验证消息的确来自微信服务器”，只是我们是在接口端实现，这样第三方开发者不需要关心校验逻辑，只需调用一下接口，即可实现校验。</span></td>
+                </tr>
+                <tr>
+                    <td class="title">Notes</td>
+                    <td class="notes">用于本框架主动（目前有网页Oauth2.0授权和微信事件推送）推送给第三方开发者的内容进行有效性验证，注意：只有本框架主动推送给开发者的消息才需要验证，开发者主动调用本框架接口的返回值不需要验证。</td>
+                </tr>
+            </table>
+        </fieldset>
+    </group>
+
     <group>
         <fieldset>
             <div>获取AccessToken接口</div>
@@ -58,7 +94,9 @@
                 </tr>
                 <tr>
                     <td class="title">Header</td>
-                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"basic"<br>command:请固定传"accesstoken"</td>
+                    <td class="notes">
+                        account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"basic"<br>command:请固定传"accesstoken"
+                    </td>
                 </tr>
                 <tr>
                     <td class="title">Returns</td>
@@ -90,11 +128,15 @@
                 </tr>
                 <tr>
                     <td class="title">Body</td>
-                    <td class="notes">JSON格式，如：<br>{<br>&nbsp;&nbsp;"url":"要跳转的地址，跳转之后，会在地址栏带上用户信息",<br>&nbsp;&nbsp;"type":"授权方式，snsapi_base或snsapi_userinfo，详见微信文档：https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html"<br>}</td>
+                    <td class="notes">
+                        JSON格式，如：<br>{<br>&nbsp;&nbsp;"url":"要跳转的地址，授权成功跳转之后，会在地址栏带上wui参数，代表微信用户信息，该参数，需要调用校验接口，获取其真实信息",<br>&nbsp;&nbsp;"type":"授权方式，snsapi_base或snsapi_userinfo，详见微信文档：https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html"<br>}
+                    </td>
                 </tr>
                 <tr>
                     <td class="title">Header</td>
-                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"oauth"<br>command:请固定传"url"</td>
+                    <td class="notes">
+                        account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts）<br>module:请固定传"oauth"<br>command:请固定传"url"
+                    </td>
                 </tr>
                 <tr>
                     <td class="title">Returns</td>
@@ -130,7 +172,9 @@
                 </tr>
                 <tr>
                     <td class="title">Header</td>
-                    <td class="notes">account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts），也可以不加，系统默认自动选择一个托管的账号<br>module:请固定传"account"<br>command:请固定传"shorturl"</td>
+                    <td class="notes">
+                        account_id:以"gh_"开头的微信号，且该公众号必须由本程序托管（即配置了accounts），也可以不加，系统默认自动选择一个托管的账号<br>module:请固定传"account"<br>command:请固定传"shorturl"
+                    </td>
                 </tr>
                 <tr>
                     <td class="title">Returns</td>

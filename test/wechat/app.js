@@ -1,7 +1,7 @@
 const comm = require('../../index');
 const path = require('path');
 comm.service.wechat({
-    port: 50001,
+    port: 50000,
     //为保证消息安全性及恶意攻击，接收端尽量验证来源IP等。
     forward: 'http://127.0.0.1:8080/wechat/push',
     //账号配置，可以多个，哪怕一个也需要配置成Array<JSON>
