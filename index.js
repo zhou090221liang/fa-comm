@@ -24,6 +24,7 @@ const mail = require('./lib/mail');
 const port = require('./lib/comm/port');
 const workfollow = require('./lib/comm/workfollow');
 const BaiDuApi = require('./lib/baidu/index');
+const calendar = require('./lib/third/calendar');
 
 //全局变量
 global._global = {
@@ -47,6 +48,7 @@ _module.sqlite3 = sqlite3;
 _module.mail = mail;
 _module.port = port;
 _module.workfollow = workfollow;
+_module.calendar = calendar;
 
 /**
  * 全局对象
