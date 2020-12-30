@@ -107,6 +107,10 @@ v0.15.5
     增加calendar，农历公里转换
 0.17.1
     wechat服务优化
+0.18.0
+    1、增加request对象，可进行请求，常见的请求：GET、POST(raw)、POST(JSON)、POST(form-data)，后续将废弃req对象
+    2、增加url对象，用于转换地址栏参数，为废弃req对象做准备
+    3、convert对象增加toJQ(toJquery)方法，为废弃req对象做准备
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
