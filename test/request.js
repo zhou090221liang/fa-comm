@@ -66,29 +66,31 @@ const reveiverData = (req) => {
     }
     console.log('服务已经启动');
 
-    let result;
+    let result, request;
+
+    request = new comm.request('http://localhost:' + port);
+    // request = new comm.request('http://localhost:' + port,headers,timeout);
 
     // //GET
-    // result = await comm.request.get('http://localhost:' + port + '/');
+    // result = await request.get('/');
     // console.log('get result1:', result);
-
-    // result = await comm.request.get('http://localhost:' + port + `/?a=1`);
+    // result = await request.get(`/?a=1`);
     // console.log('get result2:', result);
 
     // //POST JSON
-    // result = await comm.request.post(`http://127.0.0.1:${port}/?p=1`, { a: 1 });
+    // result = await request.post(`/`, { a: 1 });
     // console.log('post json result:', result);
 
     // //POST text
-    // result = await comm.request.post(`http://127.0.0.1:${port}/?p=1`, "a123456");
+    // result = await request.post(`/`, "abcdefg");
     // console.log('post text result:', result);
 
     // //POST form-data
-    // const fd = new comm.request.FormData();
+    // const fd = new request.FormData();
     // fd.append('name', '张三');
     // // fd.append('headimg',fs.createReadStream('./headimg.png'));
-    // result = await comm.request.post(`http://127.0.0.1:${port}/?p=1`, fd);
+    // result = await request.post(`/`, fd);
     // console.log('post form-data result:', result);
-
+    
     process.exit(0);
 })();
