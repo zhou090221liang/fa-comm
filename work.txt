@@ -112,7 +112,13 @@ v0.15.5
     2、增加url对象，用于转换地址栏参数，为废弃req对象做准备
     3、convert对象增加toJQ(toJquery)方法，为废弃req对象做准备
 0.18.1
-    request对象支持自定义请求头，不兼容原有方式
+    request 对象支持自定义请求头，不兼容原有方式
+0.19.0
+    progress 进度条改进与优化，不兼容原有方式
+    convert.arrive_timer_format 解决当秒数有小数时，显示异常的Bug，目前采用四舍五入
+    verify.isJson 解决当JSON对象存在length属性且值不是0时，判断异常的Bug
+    部分注释完善
+    req 对象标记成废弃的
 
 待实现的功能：
 1、实现微信公众号的一些接口功能

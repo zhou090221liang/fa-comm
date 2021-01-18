@@ -1,3 +1,8 @@
+/*
+js注释的使用
+https://juejin.cn/post/6844903873979629581
+https://github.com/yinggaozhen/doc-demo/tree/master/javascript
+*/
 require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
