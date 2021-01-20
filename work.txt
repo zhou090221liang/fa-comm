@@ -121,6 +121,9 @@ v0.15.5
     req 对象标记成废弃的
 0.19.1
     progress的autoSpeedUnit默认false
+0.19.2
+    完善部分注释
+    修复redis.lpop的Bug
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
