@@ -490,7 +490,12 @@ _module.service.wechat = function (options) {
         //Api服务器监听的端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Wechat;
         //业务请求转发地址
-        options.forward = options.forward && options.forward.isUrl ? options.forward : null;
+        // options.forward = options.forward && options.forward.isUrl ? options.forward : null;
+        if (options.accounts && options.accounts.forward) {
+            options.accounts.forward = options.accounts.forward.map(item => {
+                item = item && item.isUrl ? item : null;
+            });
+        }
         //sqlite3file
         options.sqlite3file = options.db;
         if (options.sqlite3file) {
@@ -512,8 +517,8 @@ _module.service.wechat = function (options) {
             console.info('3、自定义框架日志目录');
             console.info('自定义配置项如下：');
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Wechat);
-            console.info(`      2) forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
             console.info('      3) accounts，该配置项为一个Array<JSON>，用于配置一个或多个微信账号，具体配置方式，请查看demo。');
+            console.info(`          accounts.forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
             console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录。');
             console.info('注意事项：');
             console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);

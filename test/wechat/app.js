@@ -2,10 +2,10 @@ const comm = require('../../index');
 const path = require('path');
 comm.service.wechat({
     port: 50000,
-    //为保证消息安全性及恶意攻击，接收端尽量验证来源IP等。
-    forward: 'http://127.0.0.1:8080/wechat/push',
     //账号配置，可以多个，哪怕一个也需要配置成Array<JSON>
     accounts: [{
+        //推送给第三方开发者的接口地址，使用数组配置多个接口。
+        forward: ['http://127.0.0.1:8080/wechat/push'],
         //微信号
         account_id: 'gh_9fdb812fxxx',
         //appid
