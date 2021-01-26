@@ -4,6 +4,8 @@ comm.service.wechat({
     port: 50000,
     //账号配置，可以多个，哪怕一个也需要配置成Array<JSON>
     accounts: [{
+        //Oauth的wui过期时间，单位秒，0为永不过期
+        expire_wui: 0,
         //推送给第三方开发者的接口地址，使用数组配置多个接口。
         forward: ['http://127.0.0.1:8080/wechat/push'],
         //微信号
