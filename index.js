@@ -33,6 +33,7 @@ const calendar = require('./lib/third/calendar');
 const _axios = require('./lib/comm/axios');
 const _url = require('./lib/comm/url');
 const _date = require('./lib/comm/date');
+const session = require('./lib/session/index');
 
 //全局变量
 global._global = {
@@ -60,6 +61,7 @@ _module.calendar = calendar;
 _module.request = _axios;
 _module.url = _url;
 _module.date = _date;
+_module.session = session;
 
 /**
  * 全局对象
