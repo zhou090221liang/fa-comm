@@ -7,3 +7,4 @@ fa-comm.db
 work.txt
 *.accesstoken
 .vscode/
+session.list
