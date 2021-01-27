@@ -18,8 +18,8 @@
     let sessionid = await session.create('data2');
     console.log("create", sessionid);
 
-    result = await session.list();
-    console.log("list", result);
+    let sessionInfo = await session.get(sessionid);
+    console.log("get", sessionInfo);
 
     result = await session.del(sessionid);
     console.log("del", result);
