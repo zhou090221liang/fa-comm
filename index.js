@@ -325,9 +325,12 @@ _module.service.api = function (options) {
         //     sqlite3Obj.run(sql);
         // }
 
-        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+        // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
+        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
+        // sqlite3Obj.exec(sql);
+
         sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
-        sqlite3Obj.exec(sql);
+        new mysql(options.mysql).query(sql, null, false);
 
         _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
         setTimeout(() => {
