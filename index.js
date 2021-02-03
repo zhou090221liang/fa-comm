@@ -130,7 +130,7 @@ _module.createLog = (name, dir) => {
     if (dir) {
         logObj._dir = dir;
     } else {
-        logObj._dir = path.join(__dirname, '../../logs/');
+        logObj._dir = path.join(__dirname, '../../facomm.logs/');
     }
     logObj._outpath = logObj._dir + logObj._outfile;
     logObj._logpath = logObj._dir + logObj._logfile;
@@ -287,7 +287,7 @@ _module.service.resource = function (options) {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.api = function (options) {
+_module.service.api = async function (options) {
     try {
         options = options || {};
         //Api服务器监听的端口
@@ -309,46 +309,29 @@ _module.service.api = function (options) {
         if (_middleware) {
             options.middleware = _middleware;
         }
-        //sqlite3file
-        options.sqlite3file = options.db;
-        if (options.sqlite3file) {
-            _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
-        } else {
-            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
-        }
-        // global._global.api_sqlite3file = options.sqlite3file;
-        // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-        // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        // for (const file of files) {
-        //     const sql = fs.readFileSync(file).toString();
-        //     sqlite3Obj.run(sql);
-        // }
 
-        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
-        sqlite3Obj.exec(sql);
+        const proc = await _process.start_v2(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
 
-        _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
-        setTimeout(() => {
-            console.group('#################################### Api Info ####################################');
-            console.info(`Api服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
-            console.info('1、HTTP/1.1 监听');
-            console.info('2、自定义监听端口');
-            console.info('3、自定义业务代码目录');
-            console.info('4、自定义Api接口');
-            console.info('5、自定义Api接口中间件');
-            console.info('6、自定义静态资源托管目录');
-            console.info('7、自定义框架日志目录');
-            console.info('自定义配置项如下：');
-            console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Api);
-            console.info('      2) root，该配置项为一个目录，用于存放业务代码文件，如不配置，默认业务代码目录为当前启动文件所在目录。业务文件代码编写方式，请查看demo，主要由router.js及对应的执行器文件组成。');
-            console.info('      3) middleware，该配置项为一个目录，该目录用于存放中间件代码文件，中间件执行顺序按照文件名排列顺序执行，如需自定义执行顺序，可通过定义文件名进行排序执行，如不配置，默认将不使用中间件。中间件代码编写方式，请查看demo。');
-            console.info('      4) static，该配置项为一个目录，用于存放静态资源文件，如不配置，默认不使用静态资源');
-            console.info('      5) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
-            console.groupEnd();
-            console.info('#################################### Api Info ####################################');
-        }, 5000);
+        // setTimeout(() => {
+        console.group('#################################### Api Info ####################################');
+        console.info(`Api服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+        console.info('1、HTTP/1.1 监听');
+        console.info('2、自定义监听端口');
+        console.info('3、自定义业务代码目录');
+        console.info('4、自定义Api接口');
+        console.info('5、自定义Api接口中间件');
+        console.info('6、自定义静态资源托管目录');
+        console.info('7、自定义框架日志目录');
+        console.info('自定义配置项如下：');
+        console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Api);
+        console.info('      2) root，该配置项为一个目录，用于存放业务代码文件，如不配置，默认业务代码目录为当前启动文件所在目录。业务文件代码编写方式，请查看demo，主要由router.js及对应的执行器文件组成。');
+        console.info('      3) middleware，该配置项为一个目录，该目录用于存放中间件代码文件，中间件执行顺序按照文件名排列顺序执行，如需自定义执行顺序，可通过定义文件名进行排序执行，如不配置，默认将不使用中间件。中间件代码编写方式，请查看demo。');
+        console.info('      4) static，该配置项为一个目录，用于存放静态资源文件，如不配置，默认不使用静态资源');
+        console.groupEnd();
+        console.info('#################################### Api Info ####################################');
+        // }, 5000);
+
+        return proc;
     } catch (e) {
         console.error(e);
     }
