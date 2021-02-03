@@ -137,6 +137,17 @@ v0.15.5
     增加Session
 0.22.1
     session增加get方法
+1.0.0
+    convert增加requestData2Json方法
+    process增加start_v2方法，返回一个promise对象，包含了spawn或cluster
+    框架重构并移除cron
+    1、api
+    2、resource
+    3、cron
+    4、websocket
+    5、wechat
+    框架部分
+    package
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
