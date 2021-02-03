@@ -218,10 +218,9 @@ _module.createRedisConn = (connection) => {
 _module.service = {
     defaultPort: {
         Wechat: 19465,
-        Cron: 19466,
-        Socket: 19467,
-        Resource: 19468,
-        Api: 19469,
+        Socket: 19466,
+        Resource: 19467,
+        Api: 19468,
     }
 };
 
@@ -391,80 +390,6 @@ _module.service.websocket = _module.service.ws = async function (options) {
 };
 
 /**
- * 启动cron定时任务服务(提供接口服务)
- * @param {JSON} options 配置文件
- * @returns
- */
-_module.service.cron = async function (options) {
-    try {
-        options = options || {};
-        //cron定时任务服务器监听的端口
-        options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Cron;
-        options.root = path.join(__dirname, './lib/cron/web/');
-        options.static = path.join(__dirname, './lib/cron/web/static/');
-        options.sqlite3file = options.db;
-        if (options.sqlite3file) {
-            _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
-        } else {
-            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
-        }
-        // global._global.cron_sqlite3file = options.sqlite3file;
-        let sql;
-        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_user.sql')).toString();
-        // await sqlite3Obj.run(sql);
-        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_config.sql')).toString();
-        // await sqlite3Obj.run(sql);
-        // sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_instance.sql')).toString();
-        // await sqlite3Obj.run(sql);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron.sql')).toString();
-        await sqlite3Obj.exec(sql);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_stop.sql')).toString();
-        await sqlite3Obj.run(sql);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/cron_add_user.sql')).toString();
-        try {
-            await sqlite3Obj.run(sql);
-        } catch (e) { }
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/api.sql')).toString();
-        await sqlite3Obj.run(sql);
-        //默认的一个测试任务
-        const testCronTaskPath = path.join(__dirname, './test/cron/');
-        if (fs.existsSync(path.join(testCronTaskPath, './cron_test.js'))) {
-            const existsTestCronTask = await sqlite3Obj.get("select * from cron_config where id= ?", ['0']);
-            if (existsTestCronTask) {
-                console.warn('已经存在测试任务');
-            } else {
-                await sqlite3Obj.run("insert into cron_config(id,status,name,schedule,exec_path,exec_file,create_time) values (?,?,?,?,?,?,?);", [
-                    '0',
-                    '0',
-                    'Test',
-                    '0 0 0 * * *',
-                    testCronTaskPath,
-                    'cron_test.js',
-                    new Date().Format()
-                ]);
-            }
-        }
-        _process.start(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], 1, true, false);
-        setTimeout(() => {
-            console.group('#################################### Cron Info ####################################');
-            console.info(`Cron定时任务服务（监听端口:${options.port}）,目前已经实现的内容`);
-            console.info('1、创建任务');
-            console.info('2、启动/停止任务');
-            console.info('自定义配置项如下：');
-            console.info('      1) port，该配置项为任务管理页面HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Cron);
-            console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
-            console.info(`首次使用，请及时登录http://${ip.local}:${options.port}，修改密码（默认用户名密码均为admin），并创建任务`);
-            console.groupEnd();
-            console.info('#################################### Cron Info ####################################');
-        }, 5000);
-    } catch (e) {
-        console.error(e);
-    }
-};
-
-/**
  * 启动Wechat服务器
  * @param {JSON} options 配置文件
  * @returns
@@ -549,25 +474,6 @@ _module.service.analyzing = (_path) => {
         });
     });
     return result;
-}
-
-/**
- * 修改当前任务进度
- * @param {String} task 脚本中接收的任务对象
- * @param {number} total 总数
- * @param {number} [now=1] 当前数
- */
-_module.service.setCron = async function (task, total, now = 1) {
-    task = JSON.parse(task.decrypt());
-    const p = {
-        total,
-        now
-    };
-    const sqlite3Obj = new sqlite3(task.conf.sqlite3file, false);
-    await sqlite3Obj.run("update cron_config set process = ? where id = ?", [
-        encodeURIComponent(JSON.stringify(p)),
-        task.id
-    ]);
 }
 
 //三方Api接口
