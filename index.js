@@ -130,7 +130,7 @@ _module.createLog = (name, dir) => {
     if (dir) {
         logObj._dir = dir;
     } else {
-        logObj._dir = path.join(__dirname, '../../facomm.logs/');
+        logObj._dir = path.join(__filename, '../../../facomm.logs/');
     }
     logObj._outpath = logObj._dir + logObj._outfile;
     logObj._logpath = logObj._dir + logObj._logfile;
@@ -229,56 +229,35 @@ _module.service = {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.resource = function (options) {
+_module.service.resource = async function (options) {
     options = options && verify.isJson(options) ? options : {};
     //资源服务器监听的端口
     options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Resource;
     //允许的最大上传文件大小 单位字节 默认50MB
     options.size = options.size && verify.isNumber(options.port) ? options.size : (10 * 1024 * 1024);
     //资源上传路径 默认为当前目录
-    options.path = options.path && verify.isString(options.path) ? options.path : path.join(__dirname, '../fa-comm.uploads');
+    options.path = options.path && verify.isString(options.path) ? options.path : path.join(__filename, '../../../fa-comm.uploads');
     if (!fs.existsSync(options.path)) {
         _fs.mkdirSync(options.path);
     }
 
-    //sqlite3file
-    options.sqlite3file = options.db;
-    if (options.sqlite3file) {
-        _fs.mkdirSync(options.sqlite3file);
-        options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
-    } else {
-        options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
-    }
-    // global._global.resource_sqlite3file = options.sqlite3file;
-    // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-    // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-    // for (const file of files) {
-    //     const sql = fs.readFileSync(file).toString();
-    //     sqlite3Obj.run(sql);
-    // }
-    const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-    sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/resource.sql')).toString();
-    sqlite3Obj.exec(sql);
+    const cluster = await _process.start_v2(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
 
-    _process.start(path.join(__dirname, './lib/http/resource.js'), [JSON.stringify(options)], null, true, false);
+    console.group('#################################### Resource Info ####################################');
+    console.info(`Resource服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+    console.info('1、Resource(HTTP/1.1) 监听');
+    console.info('2、自定义监听端口');
+    console.info('3、自定义允许的最大上传文件大小');
+    console.info('4、自定义资源上传路径');
+    console.info('自定义配置项如下：');
+    console.info('      1) port，该配置项为Resource监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Resource);
+    console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位字节，如不配置，默认10MB。');
+    console.info('      3) path，该配置项为一个目录，该目录用于存放上传的资源文件，如不配置，默认为当前启动文件所在目录下的fa-comm.uploads目录下。');
+    console.info(`------------------ 详细接口说明，请访问：http://${ip.local}:${options.port} ------------------`);
+    console.groupEnd();
+    console.info('#################################### Resource Info ####################################');
 
-    setTimeout(() => {
-        console.group('#################################### Resource Info ####################################');
-        console.info(`Resource服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
-        console.info('1、Resource(HTTP/1.1) 监听');
-        console.info('2、自定义监听端口');
-        console.info('3、自定义允许的最大上传文件大小');
-        console.info('4、自定义资源上传路径');
-        console.info('5、自定义框架日志目录');
-        console.info('自定义配置项如下：');
-        console.info('      1) port，该配置项为Resource监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Resource);
-        console.info('      2) size，该配置项为允许的最大上传文件大小，配置一个数字，单位字节，如不配置，默认10MB。');
-        console.info('      3) path，该配置项为一个目录，该目录用于存放上传的资源文件，如不配置，默认为当前启动文件所在目录下的fa-comm.uploads目录下。');
-        console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
-        console.info(`------------------ 详细接口说明，请访问：http://${ip.local}:${options.port} ------------------`);
-        console.groupEnd();
-        console.info('#################################### Resource Info ####################################');
-    }, 5000);
+    return cluster;
 };
 
 /**
@@ -309,7 +288,7 @@ _module.service.api = async function (options) {
             options.middleware = _middleware;
         }
 
-        const proc = await _process.start_v2(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
+        const cluster = await _process.start_v2(path.join(__dirname, './lib/http/api.js'), [JSON.stringify(options)], null, true, false);
 
         // setTimeout(() => {
         console.group('#################################### Api Info ####################################');
@@ -330,7 +309,7 @@ _module.service.api = async function (options) {
         console.info('#################################### Api Info ####################################');
         // }, 5000);
 
-        return proc;
+        return cluster;
     } catch (e) {
         console.error(e);
     }

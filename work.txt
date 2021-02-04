@@ -145,7 +145,7 @@ v0.15.5
         1）Api服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。
         2）Resource服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。且本服务不再保存上传文件列表信息，需要用户自行保存。
         3）Wechat服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。且账号信息只存放于内存中，重启服务会丢失之前获取的AccessToken等信息。
-        4）WenSocket服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。
+        4）WebSocket服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。
         5）Session服务不再依赖sqlite3，全部使用文件输出日志，默认输出位置位于"node_modules"同级目录的facomm.logs/下，所以多项目需要使用时，不建议全局安装。且创建的Session全部保存于内存中，重启服务会丢失所有session信息。
     5、框架重构，缩小体积包
         框架部分
