@@ -1,6 +1,6 @@
 const comm = require('../../index');
 const io = require('socket.io-client');
-const client = io('http://localhost:19467');
+const client = io('http://localhost:19466');
 client.on('connection', function (msg) {
     console.log('client:' + client.id + ' receive2 msg:' + msg);
     client.emit('test', 'AAAAA', 'BBBB', 'CCCC', JSON.stringify({ "name": "张" }));

@@ -5,7 +5,7 @@
     <textarea readonly style="width: 100%;min-width: 100%;height: 400px;" id="message"></textarea>
     <script>
         window.onload = function () {
-            var client = io('http://localhost:19467');
+            var client = io('http://localhost:19466');
             client.on('connection', function (msg) {
                 msg = 'client:' + client.id + ' receive2 msg:' + msg;
                 console.log(msg);

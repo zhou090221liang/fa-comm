@@ -326,40 +326,19 @@ _module.service.websocket = _module.service.ws = async function (options) {
         //端口
         options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Socket;
 
-        //sqlite3file
-        options.sqlite3file = options.db;
-        if (options.sqlite3file) {
-            _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
-        } else {
-            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
-        }
-        // global._global.ws_sqlite3file = options.sqlite3file;
-        // const files = _fs.findfilesSync(path.join(__dirname, './resource/db/sql/'));
-        // const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        // for (const file of files) {
-        //     const sql = fs.readFileSync(file).toString();
-        //     sqlite3Obj.run(sql);
-        // }
-        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/ws.sql')).toString();
-        await sqlite3Obj.exec(sql);
-
         const socket = require('./lib/http/socket');
         const server = await socket.createServer(options);
 
-        setTimeout(() => {
+        // setTimeout(() => {
             console.group('#################################### Socket Info ####################################');
             console.info(`Socket服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
             console.info('1、WebSocket服务端 监听');
             console.info('2、自定义监听端口');
             console.info('3、自定义框架日志目录');
-            console.info('自定义配置项如下：');
             console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Socket);
-            console.info('      2) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录');
             console.groupEnd();
             console.info('#################################### Socket Info ####################################');
-        }, 5000);
+        // }, 5000);
 
         return server;
 

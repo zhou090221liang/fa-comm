@@ -5,7 +5,7 @@ const user = require('./api/user');
 (async () => {
     // const service = await comm.service.ws();
     const service = await comm.service.websocket({
-        port:8080
+        port: 19466
     });
     service.on('connection', function (socketid) {
         service.send(socketid, 'connection', 'welcome:' + socketid);
