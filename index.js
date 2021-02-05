@@ -33,7 +33,7 @@ const calendar = require('./lib/third/calendar');
 const _axios = require('./lib/comm/axios');
 const _url = require('./lib/comm/url');
 const _date = require('./lib/comm/date');
-const session = require('./lib/session/index');
+const sessionAsync = require('./lib/session/index');
 
 //全局变量
 global._global = {
@@ -61,7 +61,7 @@ _module.calendar = calendar;
 _module.request = _axios;
 _module.url = _url;
 _module.date = _date;
-_module.session = session;
+_module.sessionAsync = sessionAsync;
 
 /**
  * 全局对象
@@ -330,14 +330,14 @@ _module.service.websocket = _module.service.ws = async function (options) {
         const server = await socket.createServer(options);
 
         // setTimeout(() => {
-            console.group('#################################### Socket Info ####################################');
-            console.info(`Socket服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
-            console.info('1、WebSocket服务端 监听');
-            console.info('2、自定义监听端口');
-            console.info('3、自定义框架日志目录');
-            console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Socket);
-            console.groupEnd();
-            console.info('#################################### Socket Info ####################################');
+        console.group('#################################### Socket Info ####################################');
+        console.info(`Socket服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+        console.info('1、WebSocket服务端 监听');
+        console.info('2、自定义监听端口');
+        console.info('3、自定义框架日志目录');
+        console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Socket);
+        console.groupEnd();
+        console.info('#################################### Socket Info ####################################');
         // }, 5000);
 
         return server;

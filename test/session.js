@@ -1,6 +1,6 @@
 (async function () {
     const comm = require('../index');
-    const session = await new comm.session('test');
+    const session = await new comm.sessionAsync('test');
     console.log("创建Session对象完成", session);
 
     let result = await session.count();
