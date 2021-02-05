@@ -373,7 +373,7 @@ _module.service.websocket = _module.service.ws = async function (options) {
  * @param {JSON} options 配置文件
  * @returns
  */
-_module.service.wechat = function (options) {
+_module.service.wechat = async function (options) {
     try {
         options = options || {};
         //Api服务器监听的端口
@@ -385,41 +385,24 @@ _module.service.wechat = function (options) {
                 item = item && item.isUrl ? item : null;
             });
         }
-        //sqlite3file
-        options.sqlite3file = options.db;
-        if (options.sqlite3file) {
-            _fs.mkdirSync(options.sqlite3file);
-            options.sqlite3file = path.join(options.sqlite3file, global._global.sqlite3DbName);
-        } else {
-            options.sqlite3file = path.join(process.cwd(), global._global.sqlite3DbName);
-        }
-        const sqlite3Obj = new sqlite3(options.sqlite3file, false);
-        sql = fs.readFileSync(path.join(__dirname, './resource/db/sql/wechat.sql')).toString();
-        sqlite3Obj.exec(sql);
 
-        _process.start(path.join(__dirname, './lib/http/wechat.js'), [JSON.stringify(options)], null, true, false);
-        setTimeout(() => {
-            console.group('#################################### Wechat Info ####################################');
-            console.info(`微信测号服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
-            console.info('1、HTTP/1.1 监听，可以获取AccessToken等操作');
-            console.info('2、自定义监听端口');
-            console.info('3、自定义框架日志目录');
-            console.info('自定义配置项如下：');
-            console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Wechat);
-            console.info('      3) accounts，该配置项为一个Array<JSON>，用于配置一个或多个微信账号，具体配置方式，请查看demo。');
-            console.info(`          accounts.forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
-            console.info('      4) db，该配置项为一个目录，用于指定框架日志数据文件保存的位置，如不配置，默认为当前启动文件所在目录。');
-            console.info('注意事项：');
-            console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);
-            console.info(`      1) 微信网页授权域名，必须配置成本框架的外网域名地址可以带端口号，非必须80，网页授权也从本框架获取`);
-            // console.info('内置接口地址：');
-            // console.info(`      1) 获取AccessToken`);
-            // console.info(`         请求地址：http://${ip.local}:${options.port}/wechat/accesstoken/:account_id`);
-            // console.info(`         请求方式：GET`);
-            console.info(`---------------- 详细接口说明，请访问：http://${ip.local}:${options.port} ----------------`);
-            console.groupEnd();
-            console.info('#################################### Wechat Info ####################################');
-        }, 5000);
+        const cluster = await _process.start_v2(path.join(__dirname, './lib/http/wechat.js'), [JSON.stringify(options)], null, true, false);
+
+        console.group('#################################### Wechat Info ####################################');
+        console.info(`微信测号服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+        console.info('1、HTTP/1.1 监听，可以获取AccessToken等操作');
+        console.info('2、自定义监听端口');
+        console.info('自定义配置项如下：');
+        console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Wechat);
+        console.info('      3) accounts，该配置项为一个Array<JSON>，用于配置一个或多个微信账号，具体配置方式，请查看demo。');
+        console.info(`          accounts.forward，该配置项为一个接口地址，用于开发者接收微信推送等，微信公众号有交互时，本框架将微信消息包装后，请求该地址。微信公众号配置的地址（即使用本框架管理微信而非用户自己管理）必须为：http://${ip.local}:${options.port}/wechat/push/{account_id}，其中"http://${ip.local}:${options.port}"需映射成80端口的外网地址。`);
+        console.info('注意事项：');
+        console.info(`      1) 微信配置的接口URL，必须以"/:account_id"结尾，如："http://examples.domain.com/wechat/push/gh_9fdb812fc000"`);
+        console.info(`      1) 微信网页授权域名，必须配置成本框架的外网域名地址可以带端口号，非必须80，网页授权也从本框架获取`);
+        console.info(`---------------- 详细接口说明，请访问：http://${ip.local}:${options.port} ----------------`);
+        console.groupEnd();
+        console.info('#################################### Wechat Info ####################################');
+
     } catch (e) {
         console.error(e);
     }

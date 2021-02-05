@@ -1,7 +1,7 @@
 const comm = require('../../index');
 const path = require('path');
 comm.service.wechat({
-    port: 50000,
+    port: 19465,
     //账号配置，可以多个，哪怕一个也需要配置成Array<JSON>
     accounts: [{
         //Oauth的wui过期时间，单位秒，0为永不过期
