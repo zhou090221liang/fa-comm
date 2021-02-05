@@ -7,7 +7,7 @@ require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
 const mysql = require('./lib/db/mysql');
-const sqlite3 = require('./lib/db/sqlite3');
+// const sqlite3 = require('./lib/db/sqlite3');
 const redis = require('./lib/db/redis');
 const rabbitmq = require('./lib/queue/rabbitmq');
 const convert = require('./lib/comm/convert');
@@ -37,7 +37,7 @@ const sessionAsync = require('./lib/session/index');
 
 //全局变量
 global._global = {
-    sqlite3DbName: 'fa-comm.db'
+    // sqlite3DbName: 'fa-comm.db'
 };;
 let _module = {};
 
@@ -53,7 +53,7 @@ _module.req = _req;
 _module.system = _system;
 _module.verify = verify;
 _module.sdk = sdk;
-_module.sqlite3 = sqlite3;
+// _module.sqlite3 = sqlite3;
 _module.mail = mail;
 _module.port = port;
 _module.workfollow = workfollow;

@@ -8,3 +8,4 @@ work.txt
 *.accesstoken
 .vscode/
 session.list
+package-lock.json

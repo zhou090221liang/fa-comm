@@ -1,5 +1,5 @@
 const comm = require('../../index');
-const log = comm.createLog('fa-comm.socket');
+const log = comm.createLog('socket');
 const user = require('./api/user');
 
 (async () => {

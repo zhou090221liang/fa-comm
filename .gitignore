@@ -7,3 +7,4 @@ fa-comm.db
 *.accesstoken
 .vscode/
 session.list
+package-lock.json
