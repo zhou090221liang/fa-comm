@@ -34,6 +34,7 @@ const _axios = require('./lib/comm/axios');
 const _url = require('./lib/comm/url');
 const _date = require('./lib/comm/date');
 const sessionAsync = require('./lib/session/index');
+const concurrentTask = require('./lib/comm/concurrentTask');
 
 //全局变量
 global._global = {
@@ -62,6 +63,7 @@ _module.request = _axios;
 _module.url = _url;
 _module.date = _date;
 _module.sessionAsync = sessionAsync;
+_module.concurrentTask = concurrentTask;
 
 /**
  * 全局对象

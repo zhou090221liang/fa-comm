@@ -154,6 +154,8 @@ v0.15.5
     1、verify添加方法verificationWui，用于其他服务直接验证本框架生成的微信Oauth2.0授权的加密信息，可识别有效期，减少网络流量
     2、session增加了一些输出
     3、微信服务验证有效性的函数，调用verificationWui验证
+1.0.2
+    添加concurrentTask并发处理一些任务
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
