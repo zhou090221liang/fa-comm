@@ -6,6 +6,7 @@ https://github.com/yinggaozhen/doc-demo/tree/master/javascript
 require('./lib/comm/proto');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const mysql = require('./lib/db/mysql');
 // const sqlite3 = require('./lib/db/sqlite3');
 const redis = require('./lib/db/redis');
@@ -121,68 +122,56 @@ function getCallerFileNameAndLine() {
  */
 _module.createLog = (name, dir) => {
     let logObj = {};
-    const date = new Date().format('yyyy-MM-dd')
-    logObj._newline = '\r\n';
     logObj._name = name || "default";
-    logObj._outfile = logObj._name + "_" + date + ".out";
-    logObj._logfile = logObj._name + "_" + date + ".log";
-    logObj._infofile = logObj._name + "_" + date + ".info";
-    logObj._warnfile = logObj._name + "_" + date + ".warn";
-    logObj._errorfile = logObj._name + "_" + date + ".error";
     if (dir) {
         logObj._dir = dir;
     } else {
         logObj._dir = path.join(__filename, '../../../facomm.logs/');
     }
-    logObj._outpath = logObj._dir + logObj._outfile;
-    logObj._logpath = logObj._dir + logObj._logfile;
-    logObj._infopath = logObj._dir + logObj._infofile;
-    logObj._warnpath = logObj._dir + logObj._warnfile;
-    logObj._errorpath = logObj._dir + logObj._errorfile;
-    _module.fs.mkfileSync(logObj._outpath);
-    _module.fs.mkfileSync(logObj._logpath);
-    _module.fs.mkfileSync(logObj._infopath);
-    _module.fs.mkfileSync(logObj._warnpath);
-    _module.fs.mkfileSync(logObj._errorpath);
+    _module.fs.mkdirSync(logObj._dir);
     logObj.log = (...message) => {
+        const logfile = path.join(logObj._dir, logObj._name + "_" + (new Date().format('yyyy-MM-dd')));
         // let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[LOG]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
             _message.push(convert.toString(msg));
         }
         console.log(_message.join(' '));
-        fs.appendFileSync(logObj._logpath, _message.join('') + logObj._newline);
-        fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
+        fs.writeFileSync(logfile + '.log', _message.join('') + os.EOL, { flag: 'a' });
+        fs.writeFileSync(logfile + '.out', _message.join('') + os.EOL, { flag: 'a' });
     };
     logObj.info = (...message) => {
+        const logfile = path.join(logObj._dir, logObj._name + "_" + (new Date().format('yyyy-MM-dd')));
         // let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[INFO]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
             _message.push(convert.toString(msg));
         }
         console.info(_message.join(' '));
-        fs.appendFileSync(logObj._infopath, _message.join('') + logObj._newline);
-        fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
+        fs.writeFileSync(logfile + '.info', _message.join('') + os.EOL, { flag: 'a' });
+        fs.writeFileSync(logfile + '.out', _message.join('') + os.EOL, { flag: 'a' });
     };
     logObj.warn = (...message) => {
+        const logfile = path.join(logObj._dir, logObj._name + "_" + (new Date().format('yyyy-MM-dd')));
         // let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[WARN]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
             _message.push(convert.toString(msg));
         }
         console.warn(_message.join(' '));
-        fs.appendFileSync(logObj._warnpath, _message.join('') + logObj._newline);
-        fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
+        fs.writeFileSync(logObj.logfile + '.warn', _message.join('') + os.EOL, { flag: 'a' });
+        fs.writeFileSync(logObj.logfile + '.out', _message.join('') + os.EOL, { flag: 'a' });
     };
     logObj.error = (...message) => {
+        const logfile = path.join(logObj._dir, logObj._name + "_" + (new Date().format('yyyy-MM-dd')));
         // let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t[' + getCallerFileNameAndLine() + ']\t'];
         let _message = ['[ERROR]\t' + new Date().format('yyyy-MM-dd hh:mm:ss') + '\t' + _module.process.id + '\t'];
         for (const msg of message) {
             _message.push(convert.toString(msg));
         }
         console.error(_message.join(' '));
-        fs.appendFileSync(logObj._errorpath, _message.join('') + logObj._newline);
-        fs.appendFileSync(logObj._outpath, _message.join('') + logObj._newline);
+        fs.writeFileSync(logObj.logfile + '.error', _message.join('') + os.EOL, { flag: 'a' });
+        fs.writeFileSync(logObj.logfile + '.out', _message.join('') + os.EOL, { flag: 'a' });
     };
     return logObj;
 }
