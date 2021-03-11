@@ -164,6 +164,8 @@ v0.15.5
     修复session获取可能异常的Bug
 1.0.6
     修复session获取可能异常的Bug
+1.0.7
+    convert.toString方法优化
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
