@@ -166,6 +166,8 @@ v0.15.5
     修复session获取可能异常的Bug
 1.0.7
     convert.toString方法优化
+1.0.8
+    增加方法 new comm.request().getHtml2Jquery 用于获取网页源码并转换成Jquery对象，主要针对于爬取网页数据，且需要传heders和编码格式的情况
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
