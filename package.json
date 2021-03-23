@@ -1,6 +1,6 @@
 {
   "name": "fa-comm",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "通用方法全聚合",
   "author": "zxy<zxy@zhouxiaoyue.cn>",
   "main": "./index.js",
@@ -37,6 +37,7 @@
     "urlencode": "^1.1.0",
     "xml2json": "^0.12.0",
     "axios": "^0.21.1",
-    "form-data": "^3.0.0"
+    "form-data": "^3.0.0",
+    "url": "^0.11.0"
   }
 }
