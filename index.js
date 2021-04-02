@@ -36,6 +36,7 @@ const _url = require('./lib/comm/url');
 const _date = require('./lib/comm/date');
 const sessionAsync = require('./lib/session/index');
 const concurrentTask = require('./lib/comm/concurrentTask');
+const m3u8 = require('./lib/m3u8/index');
 
 //全局变量
 global._global = {
@@ -65,6 +66,7 @@ _module.url = _url;
 _module.date = _date;
 _module.sessionAsync = sessionAsync;
 _module.concurrentTask = concurrentTask;
+_module.m3u8 = m3u8;
 
 /**
  * 全局对象
