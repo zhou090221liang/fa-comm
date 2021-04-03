@@ -1,6 +1,17 @@
 (async function () {
     const path = require('path');
     const comm = require('../index');
+    const progressBar = new comm.progress.multipleProgressBar([{
+        title: '总进度',
+        showDuration: true,
+        showRemainingTime: true
+    }, {
+        title: '单进度',
+        showDuration: true,
+        showRemainingTime: true,
+        showSpeed: true,
+        speedUnit: '个'
+    }]);
 
     //将夜第一集（不完整）
     const url = 'https://video.buycar5.cn/20200905/mrrtZ4od/index.m3u8';
@@ -15,8 +26,8 @@
 
     //缓存资源到本地1
     m3u8Help.cache(path.join(__dirname, './m3u8chche/' + new Date().valueOf() + '/'), 16);
-    m3u8Help.cacheTaskProcess.on("process", function (data) {
-        console.log("process:", data);
+    m3u8Help.cacheTaskProcess.on("progress", function (data) {
+        progressBar.render([data.progress, data.detail.progress]);
     });
 
     // //缓存资源到本地2
