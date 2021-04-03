@@ -26,7 +26,7 @@
 
     //缓存资源到本地1
     m3u8Help.cache(path.join(__dirname, './m3u8chche/' + new Date().valueOf() + '/'), 16);
-    m3u8Help.cacheTaskProcess.on("progress", function (data) {
+    m3u8Help.cacheTaskProgress.on("progress", function (data) {
         progressBar.render([data.progress, data.detail.progress]);
     });
 
