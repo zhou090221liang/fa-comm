@@ -269,13 +269,16 @@ _module.service.api = async function (options) {
         let _middleware = null;
         if (options.middleware && verify.isString(options.middleware) && fs.existsSync(options.middleware)) {
             _middleware = options.middleware;
-        }
-        let middlewarePath = options.root;
-        if (!middlewarePath.endWith(path.sep)) {
-            middlewarePath += path.sep + 'middleware';
-        }
-        if (fs.existsSync(middlewarePath)) {
-            _middleware = middlewarePath;
+        } else {
+            _middleware = options.root;
+            if (!_middleware.endWith(path.sep)) {
+                _middleware += path.sep + 'middleware';
+            } else {
+                _middleware += 'middleware';
+            }
+            if (!fs.existsSync(_middleware)) {
+                _middleware = "";
+            }
         }
         if (_middleware) {
             options.middleware = _middleware;
