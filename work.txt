@@ -195,6 +195,10 @@ v0.15.5
     修复Api服务中间件配置异常的Bug
 1.1.10
     process增加daemons方法
+1.1.11
+    session增加setExpire方法
+1.1.12
+    修复setExpire方法Bug
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
