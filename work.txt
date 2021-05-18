@@ -199,6 +199,9 @@ v0.15.5
     session增加setExpire方法
 1.1.12
     修复setExpire方法Bug
+1.2.0
+    1、mysql的getTable得到的结构体对应的insert、update、delete、select方法支持联合主键
+    2、insert支持自定义主键的值
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
