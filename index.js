@@ -214,6 +214,7 @@ _module.service = {
         Socket: 19466,
         Resource: 19467,
         Api: 19468,
+        ApiHTTPS: 19469,
     }
 };
 
@@ -260,9 +261,27 @@ _module.service.resource = async function (options) {
  */
 _module.service.api = async function (options) {
     try {
+        let PORT = {};
         options = options || {};
+        if (!options.port) {
+            PORT.http = _module.service.defaultPort.Api;
+        }
+        if (verify.isNumber(options.port)) {
+            PORT.http = options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Api;
+        }
+        else if (verify.isJson(options.port)) {
+            if (options.port.http) {
+                PORT.http = verify.isNumber(options.port.http) && options.port.http > 1 && options.port.http <= 65535 ? options.port.http : _module.service.defaultPort.Api;
+            }
+            if (options.port.https) {
+                PORT.https = verify.isNumber(options.port.https) && options.port.https > 1 && options.port.https <= 65535 ? options.port.https : _module.service.defaultPort.ApiHTTPS;
+            }
+        } else {
+            PORT.http = _module.service.defaultPort.Api;
+        }
         //Api服务器监听的端口
-        options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Api;
+        // options.port = options.port && verify.isNumber(options.port) && options.port > 1 && options.port <= 65535 ? options.port : _module.service.defaultPort.Api;
+        options.port = PORT;
         //Api服务器对应的业务代码存放目录
         options.root = options.root && verify.isString(options.root) ? options.root : process.cwd();
         //中间件目录
@@ -288,8 +307,8 @@ _module.service.api = async function (options) {
 
         // setTimeout(() => {
         console.group('#################################### Api Info ####################################');
-        console.info(`Api服务（监听端口:${options.port}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
-        console.info('1、HTTP/1.1 监听');
+        console.info(`Api服务（监听端口:${JSON.stringify(options.port)}）,目前已经实现的内容（参考test/，该目录可理解为demo）：`);
+        console.info('1、HTTP/1.1及HTTPS/1.1 监听');
         console.info('2、自定义监听端口');
         console.info('3、自定义业务代码目录');
         console.info('4、自定义Api接口');
@@ -297,7 +316,7 @@ _module.service.api = async function (options) {
         console.info('6、自定义静态资源托管目录');
         console.info('7、自定义框架日志目录');
         console.info('自定义配置项如下：');
-        console.info('      1) port，该配置项为HTTP监听的端口，如不配置，或配置错误，默认使用' + _module.service.defaultPort.Api);
+        console.info(`      1) port，该配置项为HTTP监听的端口，如不配置(只针对HTTP，HTTPS必须配置)，或配置错误，默认使用${_module.service.defaultPort.Api}(HTTP)和${_module.service.defaultPort.ApiHTTPS}(HTTPS)`);
         console.info('      2) root，该配置项为一个目录，用于存放业务代码文件，如不配置，默认业务代码目录为当前启动文件所在目录。业务文件代码编写方式，请查看demo，主要由router.js及对应的执行器文件组成。');
         console.info('      3) middleware，该配置项为一个目录，该目录用于存放中间件代码文件，中间件执行顺序按照文件名排列顺序执行，如需自定义执行顺序，可通过定义文件名进行排序执行，如不配置，默认将不使用中间件。中间件代码编写方式，请查看demo。');
         console.info('      4) static，该配置项为一个目录，用于存放静态资源文件，如不配置，默认不使用静态资源');
