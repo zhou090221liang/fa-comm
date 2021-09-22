@@ -408,6 +408,7 @@ _module.service.wechat = async function (options) {
  * @returns
  */
 _module.service.analyzing = (_path) => {
+    const ignore = ['.DS_Store', 'desktop.ini'];
     let result = {};
     if (!_path.endWith(path.sep)) {
         _path += path.sep;
@@ -420,7 +421,11 @@ _module.service.analyzing = (_path) => {
         let _result = result;
         tmp.forEach((t, _index) => {
             if (t == basename) {
-                _result[t.replace(extname, '')] = require(file);
+                if (!ignore.find(item => item == basename)) {
+                    _result[t.replace(extname, '')] = require(file);
+                } else {
+                    console.warn(`[WARN]\t${new Date().format()}\t${_module.process.id}\tignore api file "${basename}"`);
+                }
             } else {
                 if (!_result[t]) {
                     _result[t] = {};
