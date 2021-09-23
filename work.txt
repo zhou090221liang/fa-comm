@@ -222,6 +222,18 @@ v0.15.5
     3、m3u8对象增加静态方法extractTs，用于提取一些图像格式的ts文件
 1.5.1 发布时间：2021-09-23
     NPM PUBLISH异常测试，无任何功能性改动
+1.6.0 发布时间：2021-09-23
+    1、修复另存m3u8文件，分片最大时长解析异常的Bug
+    2、优化Api服务静态资源请求的响应逻辑
+    3、m3u8对象extractTs方法支持传一个流或一个实体文件路径
+    4、增加writableStream可写流对象
+        const request = require('http').request(options, (res) => {
+            let write = new writableStream({ emitClose: true });
+            write.on('finish', () => {
+                console.log("请求返回的流数据：",write.getBuffer());
+            });
+            res.pipe(write);
+        });
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
