@@ -236,6 +236,9 @@ v0.15.5
         });
 1.6.1 发布时间：2021-09-23
     修复writableStream文件丢失的Bug
+1.6.2 发布时间：2021-09-24
+    1、m3u8对象重构（无法兼容老版本）
+    2、m3u8对象增加静态方法createM3u8、stringify、getOriginUrl、originMap
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
