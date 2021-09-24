@@ -241,6 +241,8 @@ v0.15.5
     2、m3u8对象增加静态方法createM3u8、stringify、getOriginUrl、originMap
 1.6.3 发布时间：2021-09-24
     1、修复m3u8对象saveAs方法的Bug
+1.6.4 发布时间：2021-09-24
+    修复createLog方法参数日子保存目录不存在引发的异常
 
 待实现的功能：
 1、实现微信公众号的一些接口功能

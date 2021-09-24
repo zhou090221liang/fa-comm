@@ -127,7 +127,7 @@ function getCallerFileNameAndLine() {
 _module.createLog = (name, dir) => {
     let logObj = {};
     logObj._name = name || "default";
-    if (dir) {
+    if (dir && fs.existsSync(dir)) {
         logObj._dir = dir;
     } else {
         logObj._dir = path.join(__filename, '../../../facomm.logs/');
