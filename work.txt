@@ -246,6 +246,11 @@ v0.15.5
 1.6.5 发布时间：2021-09-27
     1、Mysql对象的list方法，order参数修改
     2、Verify的isJson方法Bug处理
+1.7.0 发布时间：2021-
+    1、增加typeof函数，用于扩展原生typeof的不足，可以返回各种常见类型，且可以指定是否返回详细数据类型（区分number、array）
+    2、增加函数节流(throttle)和函数防抖(debounce)
+    3、verify增加isNull、isUndefined
+    4、Array原型函数增加isAllEqual，用于判断属猪中是否每个元素都一致
 
 待实现的功能：
 1、实现微信公众号的一些接口功能
