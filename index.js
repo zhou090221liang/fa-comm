@@ -40,6 +40,7 @@ const sessionAsync = require('./lib/session/index');
 const concurrentTask = require('./lib/comm/concurrentTask');
 const m3u8 = require('./lib/m3u8/index');
 const _writableStream = require('./lib/comm/writableStream');
+const _bash = require('./lib/comm/bash');
 
 //全局变量
 global._global = {
@@ -74,6 +75,7 @@ _module.sessionAsync = sessionAsync;
 _module.concurrentTask = concurrentTask;
 _module.m3u8 = m3u8;
 _module.writableStream = _writableStream;
+_module.bash = _bash;
 
 /**
  * 全局对象
