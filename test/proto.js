@@ -33,3 +33,15 @@ console.log("encrypt1:", text1);
 console.log("encrypt2:", text2);
 console.log("decrypt1:", text1.decrypt());
 console.log("decrypt2:", text2.decrypt());
+
+text = 10;
+text1 = text.toString().prefix(8, "0");
+console.log(`${text} -> [${text1}]`);
+
+text = 10;
+text1 = text.toString().prefix(8, " ");
+console.log(`${text} -> [${text1}]`);
+
+text = 'A';
+text1 = text.prefix(8, "@");
+console.log(`${text} -> [${text1}]`);
