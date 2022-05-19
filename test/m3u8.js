@@ -13,10 +13,9 @@
         speedUnit: '个'
     }]);
 
-    //将夜第一集（不完整）
-    const url = 'https://video.buycar5.cn/20200905/mrrtZ4od/index.m3u8';
     //斗罗大陆第一集
-    // const url = 'https://video.buycar5.cn/20200813/uNqvsBhl/index.m3u8';
+    const name = '斗罗大陆第一集';
+    const url = 'https://video.buycar5.cn/20200813/uNqvsBhl/index.m3u8';
 
     const m3u8Help = new comm.m3u8(url);
 
@@ -25,7 +24,8 @@
     // console.log(m3u8Obj);
 
     //缓存资源到本地1
-    m3u8Help.cache(path.join(__dirname, './m3u8chche/' + new Date().valueOf() + '/'), 16);
+    // m3u8Help.cache(path.join(__dirname, './m3u8chche/' + name + '/'), 32);
+    m3u8Help.cache(path.join(__dirname, './m3u8chche/' + name + '/'), 16);
     m3u8Help.cacheTaskProgress.on("progress", function (data) {
         progressBar.render([data.progress, data.detail.progress]);
     });
