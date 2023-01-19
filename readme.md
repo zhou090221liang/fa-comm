@@ -1,4 +1,9 @@
 # h1 帮助文档
+安装方式：
+```
+npm install fa-comm --unsafe-perm
+```
+
 引用方式：
 ```
 const comm = require('fa-comm');
